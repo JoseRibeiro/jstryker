@@ -19,7 +19,7 @@ public class ReflectionHelper {
 
 	/**
 	 * Inject a value into a field.
-	 * @param object Instance that contains the field.
+	 * @param bject Instance that contains the field.
 	 * @param fieldName Name of the field.
 	 * @param value Value to be injected.
 	 */
@@ -45,12 +45,32 @@ public class ReflectionHelper {
 		}
 	}
 
-	public static Object getValue(Object object, String fieldName) 
-	throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
-		Field field = object.getClass().getDeclaredField(fieldName);
-		field.setAccessible(true);
-
-		return field.get(object);
+	/**
+	 * Get a value from a field.
+	 * @param object Instance that contains the field.
+	 * @param fieldName Name of the field.
+	 * @return Value of the field.
+	 */
+	public static Object getValue(Object object, String fieldName) {
+		
+		if (object == null) {
+			throw new IllegalArgumentException("Object cannot be null.");
+		}
+		
+		if (fieldName == null) {
+			throw new IllegalArgumentException("Field name cannot be null.");
+		}
+		
+		try {
+			Field field = object.getClass().getDeclaredField(fieldName);
+			field.setAccessible(true);
+			return field.get(object);
+		} catch (NoSuchFieldException e) {
+			String message = String.format("%s does not have field %s.", object.getClass(), fieldName);
+			throw new StrykerException(message, e);
+		} catch (IllegalAccessException e) {
+			throw new StrykerException(e.getMessage(), e);
+		}
 	}
 
 	public static Field getField(Object object, String fieldName) 
