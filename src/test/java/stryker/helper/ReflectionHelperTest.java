@@ -1,4 +1,4 @@
-package striker.helper;
+package stryker.helper;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -9,8 +9,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import striker.domain.OnlyGet;
-import striker.domain.OnlySet;
+import stryker.domain.OnlyGet;
+import stryker.domain.OnlySet;
 import stryker.exception.StrykerException;
 import stryker.helper.ReflectionHelper;
 

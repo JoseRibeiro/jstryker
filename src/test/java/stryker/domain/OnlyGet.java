@@ -1,4 +1,4 @@
-package striker.domain;
+package stryker.domain;
 
 public class OnlyGet {
 	
