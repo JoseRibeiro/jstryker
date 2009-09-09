@@ -16,7 +16,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import stryker.exception.StrykerException;
-import stryker.helper.ConnectionHelper;
+import stryker.test.ConnectionHelper;
 
 /**
  * Teste para {@link ScriptRunner}.
@@ -28,7 +28,7 @@ public class ScriptRunnerTest {
 
 	@Test
 	public void shouldRunScript() throws Exception {
-		Connection connection = ConnectionHelper.getConnection();
+		Connection connection = ConnectionHelper.getConnection("membid");
 
 		ScriptRunner scriptRunner = new ScriptRunner(connection);
 		InputStream sql = ScriptRunnerTest.class.getResourceAsStream("/stryker.sql");
@@ -54,7 +54,7 @@ public class ScriptRunnerTest {
 	public void cannotRunScriptWithNullStrem() throws Exception {
 		thrown.expect(IllegalArgumentException.class);
 		thrown.expectMessage("Stream cannot be null.");
-		new ScriptRunner(ConnectionHelper.getConnection()).runScript(null);
+		new ScriptRunner(mock(Connection.class)).runScript(null);
 	}
 
 	@Test
@@ -68,5 +68,29 @@ public class ScriptRunnerTest {
 
 		thrown.expect(StrykerException.class);
 		new ScriptRunner(connection).runScript(sql);
+	}
+	
+	@Test
+	public void shouldRunScriptWithCustomDelimiter() throws Exception {
+		Connection connection = ConnectionHelper.getConnection("custom");
+
+		ScriptRunner scriptRunner = new ScriptRunner(connection, "$$");
+		InputStream sql = ScriptRunnerTest.class.getResourceAsStream("/stryker-other-delimiter.sql");
+
+		try {
+			scriptRunner.runScript(sql);
+		} finally {
+			sql.close();
+		}
+
+		Integer id = (Integer) new QueryRunner().query(connection, "Select * from stryker", new ResultSetHandler() {
+			public Object handle(ResultSet rs) throws SQLException {
+				rs.next();
+				return rs.getInt("ID");
+			}
+		});
+
+		connection.close();
+		assertEquals("Deve pegar o id.", new String("1"), id.toString());
 	}
 }

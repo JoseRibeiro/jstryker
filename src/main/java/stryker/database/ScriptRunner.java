@@ -17,13 +17,18 @@ import stryker.exception.StrykerException;
  */
 public class ScriptRunner {
 
+	/**
+	 * Default statement delimiter is ';'.
+	 */
 	public static final String DEFAULT_DELIMITER = ";";
+	
 	private Connection connection;
 	private String delimiter;
 
 	/**
-	 * @param connection
-	 * @param delimiter
+	 * Create new {@link ScriptRunner} with {@link Connection} and statement delimiter.
+	 * @param connection {@link Connection} to run script.
+	 * @param delimiter Statement delimiter eg: ';' or '$$'. 
 	 */
 	public ScriptRunner(Connection connection, String delimiter) {
 		this.connection = connection;
@@ -31,17 +36,19 @@ public class ScriptRunner {
 	}
 
 	/**
-	 * @param connection
+	 * Create new {@link ScriptRunner} with {@link Connection} whith default statement delimiter.
+	 * @see {@link ScriptRunner#DEFAULT_DELIMITER}
+	 * @param connection {@link Connection} to run script.
 	 */
 	public ScriptRunner(Connection connection) {
 		this(connection, DEFAULT_DELIMITER);
 	}
 
 	/**
-	 * Runs an SQL script.
+	 * Run an SQL script.
 	 * @param stream The source of the script.
 	 * @throws StrykerException When cannot execute script.
-	 * @throws IllegalArgumentException
+	 * @throws IllegalArgumentException If stream is null.
 	 */
 	public void runScript(InputStream stream) throws StrykerException, IllegalArgumentException {
 
@@ -74,7 +81,7 @@ public class ScriptRunner {
 	/**
 	 * @param stream  The source of the script.
 	 * @return List of commands to be executed.
-	 * @throws IOException 
+	 * @throws IOException When cannot read stream.
 	 */
 	private List<String> parse(InputStream stream) throws IOException {
 		InputStreamReader reader = new InputStreamReader(stream);
