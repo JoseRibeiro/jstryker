@@ -36,7 +36,6 @@ public class ReflectionHelperTest {
 	public void cannotBeInstantiate() throws Exception {
 		thrown.expect(IllegalAccessException.class);
 		ReflectionHelper.class.newInstance();
-
 	}
 
 	@Test
