@@ -1,7 +1,9 @@
 package stryker.database;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
+import java.io.File;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -92,5 +94,30 @@ public class DBUnitHelperTest {
 		thrown.expectMessage(reason);
 
 		DBUnitHelper.init("/unexistent-dataset.xml", connection);
+	}
+
+	@Test
+	public void shouldGenerateDateSetFromDataSource() throws Exception {
+		String path = "target/generatedDataSet.xml";
+		DBUnitHelper.generateDataSet(path, connection);
+		assertTrue("Should generate dataset from data source.", new File(path).exists());
+	}
+
+	@Test
+	public void shouldThrowStrykerExceptionWhenDataSetExceptionOccursInDataSetGenerator() throws Exception {
+		String path = "target/generatedDataSet.xml";
+		String reason = "Connection is closed";
+		thrown.expect(StrykerException.class);
+		thrown.expectMessage(reason);
+
+		connection.close();
+		DBUnitHelper.generateDataSet(path, connection);
+	}
+
+	@Test
+	public void shouldCreatePathToGenerateDataSetWhenPathDoesNotExist() throws Exception {
+		String path = "target/newFolder/generatedDataSet.xml";
+		DBUnitHelper.generateDataSet(path, connection);
+		assertTrue("Should generate dataset from data source.", new File(path).exists());
 	}
 }
