@@ -5,6 +5,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -69,13 +70,36 @@ public class ScriptRunnerTest {
 		thrown.expect(StrykerException.class);
 		new ScriptRunner(connection).runScript(sql);
 	}
-	
+
 	@Test
 	public void shouldRunScriptWithCustomDelimiter() throws Exception {
 		Connection connection = ConnectionHelper.getConnection("custom");
 
 		ScriptRunner scriptRunner = new ScriptRunner(connection, "$$");
 		InputStream sql = ScriptRunnerTest.class.getResourceAsStream("/stryker-other-delimiter.sql");
+
+		try {
+			scriptRunner.runScript(sql);
+		} finally {
+			sql.close();
+		}
+
+		Integer id = (Integer) new QueryRunner().query(connection, "Select * from stryker", new ResultSetHandler() {
+			public Object handle(ResultSet rs) throws SQLException {
+				rs.next();
+				return rs.getInt("ID");
+			}
+		});
+
+		connection.close();
+		assertEquals("Deve pegar o id.", new String("1"), id.toString());
+	}
+
+	@Test
+	public void shouldRunScriptWithCustomCharSet() throws Exception {
+		Connection connection = ConnectionHelper.getConnection("charset");
+		ScriptRunner scriptRunner = new ScriptRunner(connection, Charset.forName("utf-8"));
+		InputStream sql = ScriptRunnerTest.class.getResourceAsStream("/stryker.sql");
 
 		try {
 			scriptRunner.runScript(sql);

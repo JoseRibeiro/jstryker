@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
+import java.nio.charset.Charset;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -21,27 +22,48 @@ public class ScriptRunner {
 	 * Default statement delimiter is ';'.
 	 */
 	public static final String DEFAULT_DELIMITER = ";";
-	
+
 	private Connection connection;
 	private String delimiter;
+	private Charset charset;
 
 	/**
-	 * Create new {@link ScriptRunner} with {@link Connection} and statement delimiter.
+	 * Create new {@link ScriptRunner} with {@link Connection}, statement delimiter and {@link Charset}.
 	 * @param connection {@link Connection} to run script.
-	 * @param delimiter Statement delimiter eg: ';' or '$$'. 
+	 * @param delimiter Statement delimiter eg: ';' or '$$'.
+	 * @param charset {@link Charset} to read stream.
 	 */
-	public ScriptRunner(Connection connection, String delimiter) {
+	public ScriptRunner(Connection connection, String delimiter, Charset charset) {
 		this.connection = connection;
 		this.delimiter = delimiter;
+		this.charset = charset;
 	}
 
 	/**
-	 * Create new {@link ScriptRunner} with {@link Connection} whith default statement delimiter.
+	 * Create new {@link ScriptRunner} with {@link Connection}, default statement delimiter and default {@link Charset}.
 	 * @see {@link ScriptRunner#DEFAULT_DELIMITER}
 	 * @param connection {@link Connection} to run script.
 	 */
 	public ScriptRunner(Connection connection) {
-		this(connection, DEFAULT_DELIMITER);
+		this(connection, DEFAULT_DELIMITER, Charset.defaultCharset());
+	}
+
+	/**
+	 * Create new {@link ScriptRunner} with {@link Connection}, default statement delimiter and {@link Charset}.
+	 * @param connection {@link Connection} to run script.
+	 * @param charset {@link Charset} to read stream.
+	 */
+	public ScriptRunner(Connection connection, Charset charset) {
+		this(connection, DEFAULT_DELIMITER, charset);
+	}
+
+	/**
+	 * Create new {@link ScriptRunner} with {@link Connection}, default {@link Charset} and statement delimiter.
+	 * @param connection {@link Connection} to run script.
+	 * @param delimiter Statement delimiter eg: ';' or '$$'.
+	 */
+	public ScriptRunner(Connection connection, String delimiter) {
+		this(connection, delimiter, Charset.defaultCharset());
 	}
 
 	/**
@@ -75,7 +97,7 @@ public class ScriptRunner {
 			throw new StrykerException(e.getMessage(), e);
 		} catch (IOException e) {
 			throw new StrykerException(e.getMessage(), e);
-		} 
+		}
 	}
 
 	/**
@@ -84,7 +106,7 @@ public class ScriptRunner {
 	 * @throws IOException When cannot read stream.
 	 */
 	private List<String> parse(InputStream stream) throws IOException {
-		InputStreamReader reader = new InputStreamReader(stream);
+		InputStreamReader reader = new InputStreamReader(stream, charset);
 		LineNumberReader lineReader = new LineNumberReader(reader);
 		List<String> commands = new ArrayList<String>();
 
