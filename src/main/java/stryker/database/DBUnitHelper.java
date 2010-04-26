@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
 
 import javax.activation.DataSource;
@@ -34,8 +35,11 @@ public final class DBUnitHelper {
 
 	/**
 	 * Reset the database to dataset content.
-	 * @param resoucePath Path for dbunit dataset.
-	 * @param connection {@link Connection}.
+	 * 
+	 * @param resoucePath
+	 *            Path for dbunit dataset.
+	 * @param connection
+	 *            {@link Connection}.
 	 */
 	public static void init(String resoucePath, Connection connection) {
 		try {
@@ -45,8 +49,10 @@ public final class DBUnitHelper {
 			replacementDataSet.addReplacementObject("[null]", null);
 
 			IDatabaseConnection iConnection = new DatabaseConnection(connection);
-			TransactionOperation.DELETE_ALL.execute(iConnection, replacementDataSet);
-			TransactionOperation.INSERT.execute(iConnection, replacementDataSet);
+			TransactionOperation.DELETE_ALL.execute(iConnection,
+					replacementDataSet);
+			TransactionOperation.INSERT
+					.execute(iConnection, replacementDataSet);
 			resourceAsStream.close();
 		} catch (DatabaseUnitException e) {
 			throw new StrykerException(e.getMessage(), e);
@@ -59,13 +65,18 @@ public final class DBUnitHelper {
 
 	/**
 	 * Generate a DBUnit dataSet file from {@link DataSource}.
-	 * @param path Place where dataset will be created. If path does not exist, it will be created.
-	 * @param connection {@link Connection} to {@link DataSource}.
+	 * 
+	 * @param path
+	 *            Place where dataset will be created. If path does not exist,
+	 *            it will be created.
+	 * @param connection
+	 *            {@link Connection} to {@link DataSource}.
 	 */
-	//TODO: TEST NOT COVERED EXCEPTIONS.
+	// TODO: TEST NOT COVERED EXCEPTIONS.
 	public static void generateDataSet(String path, Connection connection) {
 		try {
-			IDatabaseConnection dbUnitConnection = new DatabaseConnection(connection);
+			IDatabaseConnection dbUnitConnection = new DatabaseConnection(
+					connection);
 			IDataSet dataSet = dbUnitConnection.createDataSet();
 			File file = new File(path);
 			if (!file.getParentFile().exists()) {
@@ -82,6 +93,27 @@ public final class DBUnitHelper {
 			throw new StrykerException(e.getMessage(), e);
 		} catch (DatabaseUnitException e) {
 			throw new StrykerException(e.getMessage(), e);
+		}
+	}
+
+	public static void initHsqldb(String resoucePath, String jdbcURL) {
+		Connection connection = getConnection(jdbcURL);
+		init(resoucePath, connection);
+		try {
+			connection.close();
+		} catch (SQLException e) {
+			throw new StrykerException(e.getMessage(), e);
+		}
+	}
+
+	public static Connection getConnection(String jdbcURL) {
+		try {
+			Class.forName("org.hsqldb.jdbcDriver");
+			return DriverManager.getConnection(jdbcURL);
+		} catch (ClassNotFoundException e) {
+			throw new RuntimeException(e);
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
 		}
 	}
 }

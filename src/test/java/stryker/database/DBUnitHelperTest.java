@@ -120,4 +120,19 @@ public class DBUnitHelperTest {
 		DBUnitHelper.generateDataSet(path, connection);
 		assertTrue("Should generate dataset from data source.", new File(path).exists());
 	}
+	
+	@Test
+	public void shouldResetHsqldbToDataSetContent() throws Exception {
+		String jdbcUrl = "jdbc:hsqldb:mem:dbunit";
+		DBUnitHelper.initHsqldb("/dbunit-dataset.xml", jdbcUrl);
+		
+		int id = (Integer) new QueryRunner().query(connection, "Select * from stryker", new ResultSetHandler() {
+			public Object handle(ResultSet rs) throws SQLException {
+				rs.next();
+				return rs.getInt("ID");
+			}
+		});
+
+		assertEquals("Should return the dataset ID.", 2, id);
+	}
 }
