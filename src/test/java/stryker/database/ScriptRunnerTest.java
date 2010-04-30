@@ -17,7 +17,6 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import stryker.exception.StrykerException;
-import stryker.test.ConnectionHelper;
 
 /**
  * Teste para {@link ScriptRunner}.

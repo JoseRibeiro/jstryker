@@ -19,7 +19,6 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import stryker.exception.StrykerException;
-import stryker.test.ConnectionHelper;
 
 /**
  * Tests for {@link DBUnitHelper}.
@@ -123,7 +122,7 @@ public class DBUnitHelperTest {
 	
 	@Test
 	public void shouldResetHsqldbToDataSetContent() throws Exception {
-		String jdbcUrl = "jdbc:hsqldb:mem:dbunit";
+		String jdbcUrl = "dbunit";
 		DBUnitHelper.initHsqldb("/dbunit-dataset.xml", jdbcUrl);
 		
 		int id = (Integer) new QueryRunner().query(connection, "Select * from stryker", new ResultSetHandler() {
