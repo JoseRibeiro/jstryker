@@ -6,16 +6,8 @@
 	<artifactId>stryker</artifactId>
 	<packaging>jar</packaging>
 	<name>Stryker</name>
-	<version>0.0.7-SNAPSHOT</version>
+	<version>0.0.8-SNAPSHOT</version>
 	
-	<distributionManagement>
-		<repository>
-			<id>local-arti</id>
-			<name>Artifactory da Scale</name>
-			<url>http://192.168.0.1:8088/artifactory/libs-snapshots-local</url>
-		</repository>
-	</distributionManagement>
-
 	<build>
 		<plugins>
 			<plugin>
