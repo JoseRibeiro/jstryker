@@ -6,7 +6,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 
 import javax.activation.DataSource;
@@ -18,6 +17,8 @@ import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.ReplacementDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSet;
+import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
+import org.dbunit.operation.DatabaseOperation;
 import org.dbunit.operation.TransactionOperation;
 
 import stryker.exception.StrykerException;
@@ -39,25 +40,43 @@ public final class DBUnitHelper {
 	 * @param connection {@link Connection}.
 	 */
 	public static void init(String resoucePath, Connection connection) {
+		execute(resoucePath, connection, TransactionOperation.CLEAN_INSERT);
+	}
+	
+	/**
+	 * Reset the database to dataset content.
+	 * @param resoucePath Path for dbunit dataset.
+	 */
+	public static void init(String resoucePath) {
+		Connection connection = ConnectionHelper.getConnection();
 		try {
-			InputStream resourceAsStream = DBUnitHelper.class.getResourceAsStream(resoucePath);
-			IDataSet dataSet = new FlatXmlDataSet(resourceAsStream);
-			ReplacementDataSet replacementDataSet = new ReplacementDataSet(dataSet);
-			replacementDataSet.addReplacementObject("[null]", null);
-
-			IDatabaseConnection iConnection = new DatabaseConnection(connection);
-			TransactionOperation.DELETE_ALL.execute(iConnection, replacementDataSet);
-			TransactionOperation.INSERT .execute(iConnection, replacementDataSet);
-			resourceAsStream.close();
-		} catch (DatabaseUnitException e) {
-			throw new StrykerException(e.getMessage(), e);
-		} catch (SQLException e) {
-			throw new StrykerException(e.getMessage(), e);
-		} catch (IOException e) {
-			throw new StrykerException(e.getMessage(), e);
+			init(resoucePath, connection);
+		} finally {
+			try {
+				connection.close();
+			} catch (SQLException e) {
+				throw new StrykerException(e.getMessage(), e);
+			}
 		}
 	}
-
+	
+	/**
+	 * Clean the database.
+	 * @param resoucePath Path for dbunit dataset.
+	 */
+	public static void clean(String resoucePath) {
+		Connection connection = ConnectionHelper.getConnection();
+		try {
+			execute(resoucePath, connection, TransactionOperation.DELETE_ALL);
+		} finally {
+			try {
+				connection.close();
+			} catch (SQLException e) {
+				throw new StrykerException(e.getMessage(), e);
+			}
+		}
+	}
+	
 	/**
 	 * Generate a DBUnit dataSet file from {@link DataSource}.
 	 * @param path Place where dataset will be created. If path does not exist, it will be created.
@@ -85,17 +104,35 @@ public final class DBUnitHelper {
 			throw new StrykerException(e.getMessage(), e);
 		}
 	}
-
-	public static void initHsqldb(String resoucePath, String jdbcURL) {
-		Connection connection = ConnectionHelper.getConnection(jdbcURL);
+	
+	/**
+	 * Execute dbunit operations in datasource.
+	 * @param resoucePath Path for dbunit dataset.
+	 * @param connection connection {@link Connection}.
+	 * @param operations {@link DatabaseOperation} to be executed.
+	 */
+	private static void execute(String resoucePath, Connection connection, DatabaseOperation... operations) {
 		try {
-			init(resoucePath, connection);
-		} finally {
-			try {
-				connection.close();
-			} catch (SQLException e) {
-				throw new StrykerException(e.getMessage(), e);
+			InputStream resourceAsStream = DBUnitHelper.class.getResourceAsStream(resoucePath);
+			
+			FlatXmlDataSetBuilder builder = new FlatXmlDataSetBuilder();
+			builder.setCaseSensitiveTableNames(true);
+			IDataSet dataSet = builder.build(resourceAsStream);
+			
+			ReplacementDataSet replacementDataSet = new ReplacementDataSet(dataSet);
+			replacementDataSet.addReplacementObject("[null]", null);
+			IDatabaseConnection iConnection = new DatabaseConnection(connection);
+			
+			for(DatabaseOperation operation : operations) {
+				operation.execute(iConnection, replacementDataSet);
 			}
+			resourceAsStream.close();
+		} catch (DatabaseUnitException e) {
+			throw new StrykerException(e.getMessage(), e);
+		} catch (SQLException e) {
+			throw new StrykerException(e.getMessage(), e);
+		} catch (IOException e) {
+			throw new StrykerException(e.getMessage(), e);
 		}
 	}
 }

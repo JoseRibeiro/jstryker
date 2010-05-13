@@ -1,5 +1,7 @@
 package stryker.database;
 
+import static org.junit.Assert.assertNotNull;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -16,5 +18,10 @@ public class ConnectionHelperTest {
 	public void cannotBeInstantiate() throws Exception {
 		thrown.expect(IllegalAccessException.class);
 		ConnectionHelper.class.newInstance();
+	}
+	
+	@Test
+	public void shouldGetConnectionFromStrykerProperties() throws Exception {
+		assertNotNull("Should get connection from stryker.properties.", ConnectionHelper.getConnection());
 	}
 }

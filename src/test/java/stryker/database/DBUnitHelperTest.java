@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.ResultSetHandler;
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
@@ -29,10 +30,10 @@ public class DBUnitHelperTest {
 	public ExpectedException thrown = ExpectedException.none();
 
 	private Connection connection;
-
+	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		Connection createDB = ConnectionHelper.getConnection("dbunit");
+		Connection createDB = ConnectionHelper.getConnection();
 		ScriptRunner scriptRunner = new ScriptRunner(createDB);
 		InputStream sql = ScriptRunnerTest.class.getResourceAsStream("/stryker.sql");
 
@@ -43,10 +44,24 @@ public class DBUnitHelperTest {
 			createDB.close();
 		}
 	}
+	
+	@AfterClass
+	public static void afterClass() throws Exception {
+		Connection connection = ConnectionHelper.getConnection();
+		ScriptRunner scriptRunner = new ScriptRunner(connection);
+		InputStream sql = ScriptRunnerTest.class.getResourceAsStream("/drop-stryker.sql");
+
+		try {
+			scriptRunner.runScript(sql);
+		} finally {
+			sql.close();
+			connection.close();
+		}
+	}
 
 	@Before
 	public void setUp() throws Exception {
-		connection = ConnectionHelper.getConnection("dbunit");
+		connection = ConnectionHelper.getConnection();
 	}
 
 	@After
@@ -119,12 +134,11 @@ public class DBUnitHelperTest {
 		DBUnitHelper.generateDataSet(path, connection);
 		assertTrue("Should generate dataset from data source.", new File(path).exists());
 	}
-	
+
 	@Test
-	public void shouldResetHsqldbToDataSetContent() throws Exception {
-		String jdbcUrl = "dbunit";
-		DBUnitHelper.initHsqldb("/dbunit-dataset.xml", jdbcUrl);
-		
+	public void shouldResetDataSourceToDataSetContent() throws Exception {
+		DBUnitHelper.init("/dbunit-dataset.xml");
+
 		int id = (Integer) new QueryRunner().query(connection, "Select * from stryker", new ResultSetHandler() {
 			public Object handle(ResultSet rs) throws SQLException {
 				rs.next();
@@ -133,5 +147,19 @@ public class DBUnitHelperTest {
 		});
 
 		assertEquals("Should return the dataset ID.", 2, id);
+	}
+
+	@Test
+	public void shouldCleanDataSourceToDataSetContent() throws Exception {
+		DBUnitHelper.init("/dbunit-dataset.xml");
+		DBUnitHelper.clean("/dbunit-dataset.xml");
+
+		int id = (Integer)  new QueryRunner().query(connection, "Select count(*) as total from stryker", new ResultSetHandler() {
+			public Object handle(ResultSet rs) throws SQLException {
+				rs.next();
+				return rs.getInt("total");
+			}
+		});
+		assertEquals("Should not have data.", 0, id);
 	}
 }

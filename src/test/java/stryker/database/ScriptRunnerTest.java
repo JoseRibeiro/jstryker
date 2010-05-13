@@ -12,6 +12,7 @@ import java.sql.SQLException;
 
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.ResultSetHandler;
+import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -25,10 +26,24 @@ public class ScriptRunnerTest {
 
 	@Rule
 	public ExpectedException thrown = ExpectedException.none();
+	
+	@After
+	public void after() throws Exception {
+		Connection connection = ConnectionHelper.getConnection();
+		ScriptRunner scriptRunner = new ScriptRunner(connection);
+		InputStream sql = ScriptRunnerTest.class.getResourceAsStream("/drop-stryker.sql");
 
+		try {
+			scriptRunner.runScript(sql);
+		} finally {
+			sql.close();
+			connection.close();
+		}
+	}
+	
 	@Test
 	public void shouldRunScript() throws Exception {
-		Connection connection = ConnectionHelper.getConnection("membid");
+		Connection connection = ConnectionHelper.getConnection();
 
 		ScriptRunner scriptRunner = new ScriptRunner(connection);
 		InputStream sql = ScriptRunnerTest.class.getResourceAsStream("/stryker.sql");
@@ -72,7 +87,7 @@ public class ScriptRunnerTest {
 
 	@Test
 	public void shouldRunScriptWithCustomDelimiter() throws Exception {
-		Connection connection = ConnectionHelper.getConnection("custom");
+		Connection connection = ConnectionHelper.getConnection();
 
 		ScriptRunner scriptRunner = new ScriptRunner(connection, "$$");
 		InputStream sql = ScriptRunnerTest.class.getResourceAsStream("/stryker-other-delimiter.sql");
@@ -96,7 +111,7 @@ public class ScriptRunnerTest {
 
 	@Test
 	public void shouldRunScriptWithCustomCharSet() throws Exception {
-		Connection connection = ConnectionHelper.getConnection("charset");
+		Connection connection = ConnectionHelper.getConnection();
 		ScriptRunner scriptRunner = new ScriptRunner(connection, Charset.forName("utf-8"));
 		InputStream sql = ScriptRunnerTest.class.getResourceAsStream("/stryker.sql");
 
