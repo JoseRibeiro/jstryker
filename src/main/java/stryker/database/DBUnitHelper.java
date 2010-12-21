@@ -59,7 +59,7 @@ public final class DBUnitHelper {
 			}
 		}
 	}
-	
+
 	/**
 	 * Clean the database.
 	 * @param resoucePath Path for dbunit dataset.
@@ -76,7 +76,7 @@ public final class DBUnitHelper {
 			}
 		}
 	}
-	
+
 	/**
 	 * Generate a DBUnit dataSet file from {@link DataSource}.
 	 * @param path Place where dataset will be created. If path does not exist, it will be created.

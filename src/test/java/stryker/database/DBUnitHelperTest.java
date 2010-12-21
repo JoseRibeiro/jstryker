@@ -93,7 +93,7 @@ public class DBUnitHelperTest {
 
 	@Test
 	public void shouldThrowStrykerExceptionWhenSQLExceptionOccurs() throws Exception {
-		String reason = "Connection is closed";
+		String reason = "connection does not exist";
 		thrown.expect(StrykerException.class);
 		thrown.expectMessage(reason);
 
@@ -120,7 +120,7 @@ public class DBUnitHelperTest {
 	@Test
 	public void shouldThrowStrykerExceptionWhenDataSetExceptionOccursInDataSetGenerator() throws Exception {
 		String path = "target/generatedDataSet.xml";
-		String reason = "Connection is closed";
+		String reason = "connection does not exist";
 		thrown.expect(StrykerException.class);
 		thrown.expectMessage(reason);
 
