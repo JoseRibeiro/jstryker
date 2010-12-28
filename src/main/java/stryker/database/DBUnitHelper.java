@@ -26,31 +26,80 @@ import stryker.exception.StrykerException;
 /**
  * Tool for DBUnit.
  */
-public final class DBUnitHelper {
-
-	/**
-	 * Cannot be instantiate.
-	 */
-	private DBUnitHelper() {
-	}
+public class DBUnitHelper {
 
 	/**
 	 * Reset the database to dataset content.
-	 * @param resoucePath Path for dbunit dataset.
+	 * @param resourcePath Path for dbunit dataset.
+	 * @param connection {@link Connection}.
+	 * @deprecated By {@link #cleanInsert(String, Connection)}.
+	 */
+	@Deprecated
+	public static void init(String resourcePath, Connection connection) {
+		new DBUnitHelper().cleanInsert(resourcePath, connection);
+	}
+
+	/**
+	 * Reset the database to dataset content performing a {@link TransactionOperation#CLEAN_INSERT} from DBUnit.
+	 * @param resourcePath Path for dbunit dataset.
 	 * @param connection {@link Connection}.
 	 */
-	public static void init(String resoucePath, Connection connection) {
-		execute(resoucePath, connection, TransactionOperation.CLEAN_INSERT);
+	public void cleanInsert(String resourcePath, Connection connection) {
+		execute(resourcePath, connection, TransactionOperation.CLEAN_INSERT);
 	}
-	
+
 	/**
 	 * Reset the database to dataset content.
-	 * @param resoucePath Path for dbunit dataset.
+	 * @param resourcePath Path for dbunit dataset.
+	 * @deprecated By {@link #cleanInsert(String)}
 	 */
-	public static void init(String resoucePath) {
+	@Deprecated
+	public static void init(String resourcePath) {
+		new DBUnitHelper().cleanInsert(resourcePath);
+	}
+
+	/**
+	 * Reset the database to dataset content performing a {@link TransactionOperation#CLEAN_INSERT} from DBUnit.
+	 * @param resourcePath Path for dbunit dataset.
+	 */
+	public void cleanInsert(String resourcePath) {
 		Connection connection = ConnectionHelper.getConnection();
 		try {
-			init(resoucePath, connection);
+			new DBUnitHelper().cleanInsert(resourcePath, connection);
+		} finally {
+			try {
+				connection.close();
+			} catch (SQLException e) {
+				throw new StrykerException(e.getMessage(), e);
+			}
+		}
+	}
+
+	/**
+	 * Clean the database with a {@link TransactionOperation#DELETE_ALL} from DBUnit.
+	 * @param resourcePath Path for dbunit dataset.
+	 */
+	public void deleteAll(String resourcePath) {
+		Connection connection = ConnectionHelper.getConnection();
+		try {
+			execute(resourcePath, connection, TransactionOperation.DELETE_ALL);
+		} finally {
+			try {
+				connection.close();
+			} catch (SQLException e) {
+				throw new StrykerException(e.getMessage(), e);
+			}
+		}
+	}
+
+	public void truncate(String resourcePath, Connection connection) {
+		execute(resourcePath, connection, DatabaseOperation.TRUNCATE_TABLE);
+	}
+
+	public void truncate(String resourcePath) {
+		Connection connection = ConnectionHelper.getConnection();
+		try {
+			truncate(resourcePath, connection);
 		} finally {
 			try {
 				connection.close();
@@ -62,19 +111,11 @@ public final class DBUnitHelper {
 
 	/**
 	 * Clean the database.
-	 * @param resoucePath Path for dbunit dataset.
+	 * @param resourcePath Path for dbunit dataset.
+	 * @deprecated By {@link #deleteAll(String)}
 	 */
-	public static void clean(String resoucePath) {
-		Connection connection = ConnectionHelper.getConnection();
-		try {
-			execute(resoucePath, connection, TransactionOperation.DELETE_ALL);
-		} finally {
-			try {
-				connection.close();
-			} catch (SQLException e) {
-				throw new StrykerException(e.getMessage(), e);
-			}
-		}
+	public static void clean(String resourcePath) {
+		new DBUnitHelper().deleteAll(resourcePath);
 	}
 
 	/**
@@ -107,13 +148,13 @@ public final class DBUnitHelper {
 	
 	/**
 	 * Execute dbunit operations in datasource.
-	 * @param resoucePath Path for dbunit dataset.
+	 * @param resourcePath Path for dbunit dataset.
 	 * @param connection connection {@link Connection}.
 	 * @param operations {@link DatabaseOperation} to be executed.
 	 */
-	private static void execute(String resoucePath, Connection connection, DatabaseOperation... operations) {
+	void execute(String resourcePath, Connection connection, DatabaseOperation... operations) {
 		try {
-			InputStream resourceAsStream = DBUnitHelper.class.getResourceAsStream(resoucePath);
+			InputStream resourceAsStream = DBUnitHelper.class.getResourceAsStream(resourcePath);
 			
 			FlatXmlDataSetBuilder builder = new FlatXmlDataSetBuilder();
 			builder.setCaseSensitiveTableNames(true);
@@ -133,6 +174,25 @@ public final class DBUnitHelper {
 			throw new StrykerException(e.getMessage(), e);
 		} catch (IOException e) {
 			throw new StrykerException(e.getMessage(), e);
+		}
+	}
+
+	public void truncateAndInsert(String resourcePath, Connection connection) {
+		execute(resourcePath, connection, TransactionOperation.TRUNCATE_TABLE);
+		execute(resourcePath, connection, TransactionOperation.INSERT);
+	}
+
+	public void truncateAndInsert(String resourcePath) {
+		Connection connection = ConnectionHelper.getConnection();
+		try {
+			execute(resourcePath, connection, TransactionOperation.TRUNCATE_TABLE);
+			execute(resourcePath, connection, TransactionOperation.INSERT);
+		} finally {
+			try {
+				connection.close();
+			} catch (SQLException e) {
+				throw new StrykerException(e.getMessage(), e);
+			}
 		}
 	}
 }

@@ -2,6 +2,11 @@ package stryker.database;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
 
 import java.io.File;
 import java.io.InputStream;
@@ -11,6 +16,7 @@ import java.sql.SQLException;
 
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.ResultSetHandler;
+import org.dbunit.operation.DatabaseOperation;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -19,6 +25,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import org.mockito.InOrder;
 import stryker.exception.StrykerException;
 
 /**
@@ -72,14 +79,8 @@ public class DBUnitHelperTest {
 	}
 
 	@Test
-	public void cannotBeInstantiate() throws Exception {
-		thrown.expect(IllegalAccessException.class);
-		DBUnitHelper.class.newInstance();
-	}
-
-	@Test
 	public void shouldResetDataBaseToDataSetContent() throws Exception {
-		DBUnitHelper.init("/dbunit-dataset.xml", connection);
+		new DBUnitHelper().cleanInsert("/dbunit-dataset.xml", connection);
 
 		int id = (Integer) new QueryRunner().query(connection, "Select * from stryker", new ResultSetHandler() {
 			public Object handle(ResultSet rs) throws SQLException {
@@ -98,7 +99,7 @@ public class DBUnitHelperTest {
 		thrown.expectMessage(reason);
 
 		connection.close();
-		DBUnitHelper.init("/dbunit-dataset.xml", connection);
+		new DBUnitHelper().cleanInsert("/dbunit-dataset.xml", connection);
 	}
 
 	@Test
@@ -107,7 +108,29 @@ public class DBUnitHelperTest {
 		thrown.expect(StrykerException.class);
 		thrown.expectMessage(reason);
 
-		DBUnitHelper.init("/unexistent-dataset.xml", connection);
+		new DBUnitHelper().cleanInsert("/unexistent-dataset.xml", connection);
+	}
+
+	@Test
+	public void shouldResetDataBaseToDataSetContentWithTruncateTable() throws Exception {
+		DBUnitHelper dbUnitHelper = spy(new DBUnitHelper());
+		String resourcePath = "/dbunit-dataset-without-id.xml";
+		dbUnitHelper.truncateAndInsert(resourcePath);
+		
+		InOrder inOrder = inOrder(dbUnitHelper);
+		inOrder.verify(dbUnitHelper).execute(eq(resourcePath), any(Connection.class), eq(DatabaseOperation.TRUNCATE_TABLE));
+		inOrder.verify(dbUnitHelper).execute(eq(resourcePath), any(Connection.class), eq(DatabaseOperation.INSERT));
+	}
+
+	@Test
+	public void shouldResetDataBaseToDataSetContentWithTruncateTableUsingSpecifiedConnection() throws Exception {
+		DBUnitHelper dbUnitHelper = spy(new DBUnitHelper());
+		String resourcePath = "/dbunit-dataset-without-id.xml";
+		dbUnitHelper.truncateAndInsert(resourcePath, connection);
+
+		InOrder inOrder = inOrder(dbUnitHelper);
+		inOrder.verify(dbUnitHelper).execute(resourcePath, connection, DatabaseOperation.TRUNCATE_TABLE);
+		inOrder.verify(dbUnitHelper).execute(resourcePath, connection, DatabaseOperation.INSERT);
 	}
 
 	@Test
@@ -137,7 +160,7 @@ public class DBUnitHelperTest {
 
 	@Test
 	public void shouldResetDataSourceToDataSetContent() throws Exception {
-		DBUnitHelper.init("/dbunit-dataset.xml");
+		new DBUnitHelper().cleanInsert("/dbunit-dataset.xml");
 
 		int id = (Integer) new QueryRunner().query(connection, "Select * from stryker", new ResultSetHandler() {
 			public Object handle(ResultSet rs) throws SQLException {
@@ -150,9 +173,10 @@ public class DBUnitHelperTest {
 	}
 
 	@Test
-	public void shouldCleanDataSourceToDataSetContent() throws Exception {
-		DBUnitHelper.init("/dbunit-dataset.xml");
-		DBUnitHelper.clean("/dbunit-dataset.xml");
+	public void shouldDeleteAllData() throws Exception {
+		DBUnitHelper dbUnitHelper = new DBUnitHelper();
+		dbUnitHelper.cleanInsert("/dbunit-dataset.xml");
+		dbUnitHelper.deleteAll("/dbunit-dataset.xml");
 
 		int id = (Integer)  new QueryRunner().query(connection, "Select count(*) as total from stryker", new ResultSetHandler() {
 			public Object handle(ResultSet rs) throws SQLException {
@@ -161,5 +185,25 @@ public class DBUnitHelperTest {
 			}
 		});
 		assertEquals("Should not have data.", 0, id);
+	}
+
+	@Test
+	public void shouldTruncateData() throws Exception {
+		DBUnitHelper dbUnitHelper = spy(new DBUnitHelper());
+		String resourcePath = "/dbunit-dataset.xml";
+
+		dbUnitHelper.truncate(resourcePath);
+
+		verify(dbUnitHelper).execute(eq(resourcePath), any(Connection.class), eq(DatabaseOperation.TRUNCATE_TABLE));
+	}
+
+	@Test
+	public void shouldTruncateDataWithSpecifiedConnection() throws Exception {
+		DBUnitHelper dbUnitHelper = spy(new DBUnitHelper());
+		String resourcePath = "/dbunit-dataset.xml";
+
+		dbUnitHelper.truncate(resourcePath, connection);
+
+		verify(dbUnitHelper).execute(resourcePath, connection, DatabaseOperation.TRUNCATE_TABLE);
 	}
 }
