@@ -15,8 +15,8 @@
 	<build>
 		<plugins>
 			<plugin>
-				<groupid>org.apache.maven.plugins</groupid>
-				<artifactid>maven-release-plugin</artifactid>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
 				<version>2.1</version>
 			</plugin>
 			<plugin>
