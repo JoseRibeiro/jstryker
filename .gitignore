@@ -2,3 +2,6 @@
 .project
 .settings
 target
+stryker.iml
+stryker.ipr
+stryker.iws
