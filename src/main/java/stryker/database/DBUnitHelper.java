@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import javax.activation.DataSource;
 
@@ -189,7 +190,7 @@ public class DBUnitHelper {
 	/**
 	 * Execute dbunit operations in datasource.
 	 * @param resourcePath Path for dbunit dataset.
-	 * @param connection connection {@link Connection}.
+	 * @param connection {@link Connection}.
 	 * @param operations {@link DatabaseOperation} to be executed.
 	 */
 	void execute(String resourcePath, Connection connection, DatabaseOperation... operations) {
@@ -213,6 +214,41 @@ public class DBUnitHelper {
 		} catch (SQLException e) {
 			throw new StrykerException(e.getMessage(), e);
 		} catch (IOException e) {
+			throw new StrykerException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * Disable MySQL foreign key checks on this connection.<br>
+	 * For certain cases, you must disable foreign key checks before truncate or delete all table data. Remember that
+	 * you must use this connection to perform the delete all or the truncate.
+	 * @param connection {@link Connection}.
+	 * @throws StrykerException If any error occurs during disable.
+	 * @see #enableMysqlForeignKeyChecks(java.sql.Connection)
+	 * @see #cleanInsert(String, java.sql.Connection)
+	 * @see #truncate(String, java.sql.Connection)
+	 * @see #truncateAndInsert(String, java.sql.Connection)
+	 */
+	public void disableMysqlForeignKeyChecks(Connection connection) throws StrykerException {
+		setMysqlForeignKeyChecks(connection, 0);
+	}
+
+	/**
+	 * Enable MySQL foreign key checks on this connection.<br>
+	 * @param connection {@link Connection}.
+	 * @throws StrykerException If any error occurs during enable.
+	 * @see #disableMysqlForeignKeyChecks(java.sql.Connection)
+	 */
+	public void enableMysqlForeignKeyChecks(Connection connection) throws StrykerException {
+		setMysqlForeignKeyChecks(connection, 1);
+	}
+
+	private void setMysqlForeignKeyChecks(Connection connection, int value) throws StrykerException {
+		try {
+			Statement statement = connection.createStatement();
+			statement.execute("SET @@foreign_key_checks = " + value);
+			statement.close();
+		} catch (SQLException e) {
 			throw new StrykerException(e.getMessage(), e);
 		}
 	}

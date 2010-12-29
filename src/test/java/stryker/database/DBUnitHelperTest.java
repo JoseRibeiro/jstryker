@@ -4,15 +4,14 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 import java.io.File;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.ResultSetHandler;
@@ -205,5 +204,57 @@ public class DBUnitHelperTest {
 		dbUnitHelper.truncate(resourcePath, connection);
 
 		verify(dbUnitHelper).execute(resourcePath, connection, DatabaseOperation.TRUNCATE_TABLE);
+	}
+
+	@Test
+	public void shouldDisableMysqlForeignKeyChecks() throws Exception {
+		Statement statement = mock(Statement.class);
+
+		Connection connection = mock(Connection.class);
+		when(connection.createStatement()).thenReturn(statement);
+
+		DBUnitHelper dbUnitHelper = new DBUnitHelper();
+		dbUnitHelper.disableMysqlForeignKeyChecks(connection);
+
+		InOrder inOrder = inOrder(statement);
+		inOrder.verify(statement).execute("SET @@foreign_key_checks = 0");
+		inOrder.verify(statement).close();
+	}
+
+	@Test
+	public void shouldThrowStrykerExceptionWhenSQLExceptionOccursInDisableMysqlForeignKeyChecks() throws Exception {
+		thrown.expect(StrykerException.class);
+		thrown.expectMessage("connection does not exist");
+
+		connection.close();
+
+		DBUnitHelper dbUnitHelper = new DBUnitHelper();
+		dbUnitHelper.disableMysqlForeignKeyChecks(connection);
+	}
+
+	@Test
+	public void shouldEnableMysqlForeignKeyChecks() throws Exception {
+		Statement statement = mock(Statement.class);
+
+		Connection connection = mock(Connection.class);
+		when(connection.createStatement()).thenReturn(statement);
+
+		DBUnitHelper dbUnitHelper = new DBUnitHelper();
+		dbUnitHelper.enableMysqlForeignKeyChecks(connection);
+
+		InOrder inOrder = inOrder(statement);
+		inOrder.verify(statement).execute("SET @@foreign_key_checks = 1");
+		inOrder.verify(statement).close();
+	}
+
+	@Test
+	public void shouldThrowStrykerExceptionWhenSQLExceptionOccursInEnableMysqlForeignKeyChecks() throws Exception {
+		thrown.expect(StrykerException.class);
+		thrown.expectMessage("connection does not exist");
+
+		connection.close();
+
+		DBUnitHelper dbUnitHelper = new DBUnitHelper();
+		dbUnitHelper.enableMysqlForeignKeyChecks(connection);
 	}
 }
