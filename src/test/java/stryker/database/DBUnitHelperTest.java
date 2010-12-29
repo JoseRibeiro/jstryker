@@ -187,6 +187,16 @@ public class DBUnitHelperTest {
 	}
 
 	@Test
+	public void shouldDeleteAllDataWithSpecifiedConnection() throws Exception {
+		DBUnitHelper dbUnitHelper = spy(new DBUnitHelper());
+
+		String resourcePath = "/dbunit-dataset.xml";
+		dbUnitHelper.deleteAll(resourcePath, connection);
+
+		verify(dbUnitHelper).execute(eq(resourcePath), any(Connection.class), eq(DatabaseOperation.DELETE_ALL));
+	}
+
+	@Test
 	public void shouldTruncateData() throws Exception {
 		DBUnitHelper dbUnitHelper = spy(new DBUnitHelper());
 		String resourcePath = "/dbunit-dataset.xml";

@@ -123,7 +123,7 @@ public class DBUnitHelper {
 	public void deleteAll(String resourcePath) {
 		Connection connection = ConnectionHelper.getConnection();
 		try {
-			execute(resourcePath, connection, TransactionOperation.DELETE_ALL);
+			deleteAll(resourcePath, connection);
 		} finally {
 			try {
 				connection.close();
@@ -131,6 +131,10 @@ public class DBUnitHelper {
 				throw new StrykerException(e.getMessage(), e);
 			}
 		}
+	}
+
+	public void deleteAll(String resourcePath, Connection connection) {
+		execute(resourcePath, connection, DatabaseOperation.DELETE_ALL);
 	}
 
 	/**
