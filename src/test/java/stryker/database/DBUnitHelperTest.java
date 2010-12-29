@@ -114,7 +114,7 @@ public class DBUnitHelperTest {
 	@Test
 	public void shouldResetDataBaseToDataSetContentWithTruncateTable() throws Exception {
 		DBUnitHelper dbUnitHelper = spy(new DBUnitHelper());
-		String resourcePath = "/dbunit-dataset-without-id.xml";
+		String resourcePath = "/dbunit-dataset.xml";
 		dbUnitHelper.truncateAndInsert(resourcePath);
 		
 		InOrder inOrder = inOrder(dbUnitHelper);
@@ -125,7 +125,7 @@ public class DBUnitHelperTest {
 	@Test
 	public void shouldResetDataBaseToDataSetContentWithTruncateTableUsingSpecifiedConnection() throws Exception {
 		DBUnitHelper dbUnitHelper = spy(new DBUnitHelper());
-		String resourcePath = "/dbunit-dataset-without-id.xml";
+		String resourcePath = "/dbunit-dataset.xml";
 		dbUnitHelper.truncateAndInsert(resourcePath, connection);
 
 		InOrder inOrder = inOrder(dbUnitHelper);
