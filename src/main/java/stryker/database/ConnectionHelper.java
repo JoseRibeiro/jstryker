@@ -16,8 +16,16 @@ public final class ConnectionHelper {
 	 */
 	private ConnectionHelper() {
 	}
-	
-	public static Connection getConnection() {
+
+	/**
+	 * Open a database connection using <code>stryker.properties</code> or <code>hibernate.properties</code> as
+	 * configuration.<br>
+	 * First it tries to read <code>stryker.properties</code>, if there is no such file, it tries to read
+	 * <code>hibernate.properties</code>.
+	 * @return Database {@link Connection}.
+	 * @throws StrykerException If cannot read any configuration file or if an error occurs during open connection.
+	 */
+	public static Connection getConnection() throws StrykerException {
 		Properties properties = new Properties();
 		try {
 
@@ -36,6 +44,7 @@ public final class ConnectionHelper {
 				password = properties.getProperty("password");
 				user = properties.getProperty("user");
 				url = properties.getProperty("jdbc.url");
+				
 			} else {
 				properties.load(hibernateConnection);
 
