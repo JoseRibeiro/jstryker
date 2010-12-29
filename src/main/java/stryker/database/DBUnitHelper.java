@@ -133,6 +133,11 @@ public class DBUnitHelper {
 		}
 	}
 
+	/**
+	 * Clean the database with a {@link TransactionOperation#DELETE_ALL} from DBUnit.
+	 * @param resourcePath Path for dbunit dataset.
+	 * @param connection {@link Connection}.
+	 */
 	public void deleteAll(String resourcePath, Connection connection) {
 		execute(resourcePath, connection, DatabaseOperation.DELETE_ALL);
 	}
