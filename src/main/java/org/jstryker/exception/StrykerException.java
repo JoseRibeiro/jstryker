@@ -1,4 +1,4 @@
-package stryker.exception;
+package org.jstryker.exception;
 
 /**
  * An exception that provides information on a stryker operation. 

@@ -1,4 +1,4 @@
-package stryker.database;
+package org.jstryker.database;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -22,7 +22,7 @@ import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
 import org.dbunit.operation.DatabaseOperation;
 import org.dbunit.operation.TransactionOperation;
 
-import stryker.exception.StrykerException;
+import org.jstryker.exception.StrykerException;
 
 /**
  * Tool for DBUnit.

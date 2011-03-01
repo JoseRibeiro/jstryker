@@ -1,4 +1,4 @@
-package stryker.domain;
+package org.jstryker.domain;
 
 public class OnlyGet {
 	

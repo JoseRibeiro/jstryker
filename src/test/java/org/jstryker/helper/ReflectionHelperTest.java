@@ -1,4 +1,4 @@
-package stryker.helper;
+package org.jstryker.helper;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -9,10 +9,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import stryker.domain.OnlyGet;
-import stryker.domain.OnlySet;
-import stryker.exception.StrykerException;
-import stryker.helper.ReflectionHelper;
+import org.jstryker.domain.OnlyGet;
+import org.jstryker.domain.OnlySet;
+import org.jstryker.exception.StrykerException;
 
 /**
  * Test to {@link ReflectionHelper}.

@@ -1,4 +1,4 @@
-package stryker.database;
+package org.jstryker.database;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -7,7 +7,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
-import stryker.exception.StrykerException;
+import org.jstryker.exception.StrykerException;
 
 public final class ConnectionHelper {
 	

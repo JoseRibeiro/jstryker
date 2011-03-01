@@ -1,4 +1,4 @@
-package stryker.database;
+package org.jstryker.database;
 
 import static org.junit.Assert.assertNotNull;
 

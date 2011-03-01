@@ -1,4 +1,4 @@
-package stryker.database;
+package org.jstryker.database;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -25,7 +25,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import org.mockito.InOrder;
-import stryker.exception.StrykerException;
+import org.jstryker.exception.StrykerException;
 
 /**
  * Tests for {@link DBUnitHelper}.

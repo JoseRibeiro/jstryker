@@ -1,4 +1,4 @@
-package stryker.database;
+package org.jstryker.database;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,7 +11,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import stryker.exception.StrykerException;
+import org.jstryker.exception.StrykerException;
 
 /**
  * Tool to run database scripts.

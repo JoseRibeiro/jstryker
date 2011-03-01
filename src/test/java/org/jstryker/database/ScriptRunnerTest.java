@@ -1,4 +1,4 @@
-package stryker.database;
+package org.jstryker.database;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
@@ -17,7 +17,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import stryker.exception.StrykerException;
+import org.jstryker.exception.StrykerException;
 
 /**
  * Teste para {@link ScriptRunner}.

@@ -1,4 +1,4 @@
-package stryker;
+package org.jstryker;
 
 import javax.annotation.Resource;
 import javax.annotation.Resources;
@@ -7,7 +7,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import stryker.domain.Annotated;
+import org.jstryker.domain.Annotated;
 
 /**
  * Tests to {@link AnnotationTester}.
@@ -25,7 +25,7 @@ public class AnnotationTesterTest {
     @Test
     public void shouldKnowThatFieldIsNotAnnotated() throws Exception {
         thrown.expect(AssertionError.class);
-        thrown.expectMessage("Annotation javax.annotation.Resources is not present in stryker.domain.Annotated class.");
+        thrown.expectMessage("Annotation javax.annotation.Resources is not present in org.jstryker.domain.Annotated class.");
         AnnotationTester.isAnnotationPresent(Annotated.class, Resources.class);
     }
    
