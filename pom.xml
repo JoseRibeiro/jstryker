@@ -5,7 +5,7 @@
 	<artifactId>jstryker</artifactId>
 	<packaging>jar</packaging>
 	<name>JStryker</name>
-	<version>1.0.1-SNAPSHOT</version>
+	<version>1.0.1</version>
 	<description>Tools to help automated tests in java.</description>
 	<url>http://jstryker.org</url>
 
