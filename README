@@ -2,11 +2,13 @@ Tools to help automated tests in java.
 
 Collaborators:
 
-José Guilherme
+JosÃ© Guilherme
 http://github.com/JoseRibeiro
+http://twitter.com/joseguilhermecr
 
 Rodolfo Liviero
 http://github.com/rodolfoliviero
+http://twitter.com/rodolfoliviero
 
 Examples
 
@@ -29,12 +31,17 @@ Examples
        ReflectionHelper.injectValue(object, "propertyName", value);
  3.2 - Get value
        ReflectionHelper.getValue(object, "propertyName");
-  3.3 - Set value in static field
+ 3.3 - Set value in static field
        ReflectionHelper.injectValueInStaticField(object, "propertyName",  value);
 
 4 - Test Annotation
 
   4.1 - Test if annotation is present
           AnnotationTester.isAnnotationPresent(Annotated.class, AnnotationToBeVerified.class);
+
+5 - Hibernate and DBunit Integration
+
+  5.1 - If you have hibernate.properties in classpath just do that.
+        DBUnitHelper.init("/dbunit-dataset.xml");
 
 More features are comming. 
