@@ -37,7 +37,11 @@
 			<url>https://github.com/rodolfoliviero</url>
 		</developer>
 	</developers>
-
+	
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+	
 	<build>
 		<plugins>
 			<plugin>
@@ -51,7 +55,7 @@
 				<configuration>
 					<source>1.5</source>
 					<target>1.5</target>
-					<encoding>ISO-8859-1</encoding>
+					<encoding>UTF-8</encoding>
 				</configuration>
 			</plugin>
 			<plugin>
