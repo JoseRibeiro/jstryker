@@ -31,7 +31,7 @@ public class ScriptRunnerTest {
 	public void after() throws Exception {
 		Connection connection = ConnectionHelper.getConnection();
 		ScriptRunner scriptRunner = new ScriptRunner(connection);
-		InputStream sql = ScriptRunnerTest.class.getResourceAsStream("/drop-stryker.sql");
+		InputStream sql = ScriptRunnerTest.class.getResourceAsStream("/drop-jstryker.sql");
 
 		try {
 			scriptRunner.runScript(sql);
@@ -46,7 +46,7 @@ public class ScriptRunnerTest {
 		Connection connection = ConnectionHelper.getConnection();
 
 		ScriptRunner scriptRunner = new ScriptRunner(connection);
-		InputStream sql = ScriptRunnerTest.class.getResourceAsStream("/stryker.sql");
+		InputStream sql = ScriptRunnerTest.class.getResourceAsStream("/jstryker.sql");
 
 		try {
 			scriptRunner.runScript(sql);
@@ -54,7 +54,7 @@ public class ScriptRunnerTest {
 			sql.close();
 		}
 
-		Integer id = (Integer) new QueryRunner().query(connection, "Select * from stryker", new ResultSetHandler() {
+		Integer id = (Integer) new QueryRunner().query(connection, "Select * from jstryker", new ResultSetHandler() {
 			public Object handle(ResultSet rs) throws SQLException {
 				rs.next();
 				return rs.getInt("ID");
@@ -79,7 +79,7 @@ public class ScriptRunnerTest {
 		thrown.expectMessage(message);
 		when(connection.createStatement()).thenThrow(new SQLException(message));
 
-		InputStream sql = ScriptRunnerTest.class.getResourceAsStream("/stryker.sql");
+		InputStream sql = ScriptRunnerTest.class.getResourceAsStream("/jstryker.sql");
 
 		thrown.expect(JStrykerException.class);
 		new ScriptRunner(connection).runScript(sql);
@@ -90,7 +90,7 @@ public class ScriptRunnerTest {
 		Connection connection = ConnectionHelper.getConnection();
 
 		ScriptRunner scriptRunner = new ScriptRunner(connection, "$$");
-		InputStream sql = ScriptRunnerTest.class.getResourceAsStream("/stryker-other-delimiter.sql");
+		InputStream sql = ScriptRunnerTest.class.getResourceAsStream("/jstryker-other-delimiter.sql");
 
 		try {
 			scriptRunner.runScript(sql);
@@ -98,7 +98,7 @@ public class ScriptRunnerTest {
 			sql.close();
 		}
 
-		Integer id = (Integer) new QueryRunner().query(connection, "Select * from stryker", new ResultSetHandler() {
+		Integer id = (Integer) new QueryRunner().query(connection, "Select * from jstryker", new ResultSetHandler() {
 			public Object handle(ResultSet rs) throws SQLException {
 				rs.next();
 				return rs.getInt("ID");
@@ -113,7 +113,7 @@ public class ScriptRunnerTest {
 	public void shouldRunScriptWithCustomCharSet() throws Exception {
 		Connection connection = ConnectionHelper.getConnection();
 		ScriptRunner scriptRunner = new ScriptRunner(connection, Charset.forName("utf-8"));
-		InputStream sql = ScriptRunnerTest.class.getResourceAsStream("/stryker.sql");
+		InputStream sql = ScriptRunnerTest.class.getResourceAsStream("/jstryker.sql");
 
 		try {
 			scriptRunner.runScript(sql);
@@ -121,7 +121,7 @@ public class ScriptRunnerTest {
 			sql.close();
 		}
 
-		Integer id = (Integer) new QueryRunner().query(connection, "Select * from stryker", new ResultSetHandler() {
+		Integer id = (Integer) new QueryRunner().query(connection, "Select * from jstryker", new ResultSetHandler() {
 			public Object handle(ResultSet rs) throws SQLException {
 				rs.next();
 				return rs.getInt("ID");

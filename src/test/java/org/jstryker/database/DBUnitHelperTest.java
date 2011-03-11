@@ -41,7 +41,7 @@ public class DBUnitHelperTest {
 	public static void setUpBeforeClass() throws Exception {
 		Connection createDB = ConnectionHelper.getConnection();
 		ScriptRunner scriptRunner = new ScriptRunner(createDB);
-		InputStream sql = ScriptRunnerTest.class.getResourceAsStream("/stryker.sql");
+		InputStream sql = ScriptRunnerTest.class.getResourceAsStream("/jstryker.sql");
 
 		try {
 			scriptRunner.runScript(sql);
@@ -55,7 +55,7 @@ public class DBUnitHelperTest {
 	public static void afterClass() throws Exception {
 		Connection connection = ConnectionHelper.getConnection();
 		ScriptRunner scriptRunner = new ScriptRunner(connection);
-		InputStream sql = ScriptRunnerTest.class.getResourceAsStream("/drop-stryker.sql");
+		InputStream sql = ScriptRunnerTest.class.getResourceAsStream("/drop-jstryker.sql");
 
 		try {
 			scriptRunner.runScript(sql);
@@ -81,7 +81,7 @@ public class DBUnitHelperTest {
 	public void shouldResetDataBaseToDataSetContent() throws Exception {
 		new DBUnitHelper().cleanInsert("/dbunit-dataset.xml", connection);
 
-		int id = (Integer) new QueryRunner().query(connection, "Select * from stryker", new ResultSetHandler() {
+		int id = (Integer) new QueryRunner().query(connection, "Select * from jstryker", new ResultSetHandler() {
 			public Object handle(ResultSet rs) throws SQLException {
 				rs.next();
 				return rs.getInt("ID");
@@ -161,7 +161,7 @@ public class DBUnitHelperTest {
 	public void shouldResetDataSourceToDataSetContent() throws Exception {
 		new DBUnitHelper().cleanInsert("/dbunit-dataset.xml");
 
-		int id = (Integer) new QueryRunner().query(connection, "Select * from stryker", new ResultSetHandler() {
+		int id = (Integer) new QueryRunner().query(connection, "Select * from jstryker", new ResultSetHandler() {
 			public Object handle(ResultSet rs) throws SQLException {
 				rs.next();
 				return rs.getInt("ID");
@@ -177,7 +177,7 @@ public class DBUnitHelperTest {
 		dbUnitHelper.cleanInsert("/dbunit-dataset.xml");
 		dbUnitHelper.deleteAll("/dbunit-dataset.xml");
 
-		int id = (Integer)  new QueryRunner().query(connection, "Select count(*) as total from stryker", new ResultSetHandler() {
+		int id = (Integer)  new QueryRunner().query(connection, "Select count(*) as total from jstryker", new ResultSetHandler() {
 			public Object handle(ResultSet rs) throws SQLException {
 				rs.next();
 				return rs.getInt("total");

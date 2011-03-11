@@ -22,6 +22,6 @@ public class ConnectionHelperTest {
 	
 	@Test
 	public void shouldGetConnectionFromStrykerProperties() throws Exception {
-		assertNotNull("Should get connection from stryker.properties.", ConnectionHelper.getConnection());
+		assertNotNull("Should get connection from jstryker.properties.", ConnectionHelper.getConnection());
 	}
 }

@@ -29,7 +29,7 @@ public final class ConnectionHelper {
 		Properties properties = new Properties();
 		try {
 
-			InputStream stykerConnection = ConnectionHelper.class.getResourceAsStream("/stryker.properties");
+			InputStream stykerConnection = ConnectionHelper.class.getResourceAsStream("/jstryker.properties");
 			InputStream hibernateConnection = ConnectionHelper.class.getResourceAsStream("/hibernate.properties");
 			
 			String password;
