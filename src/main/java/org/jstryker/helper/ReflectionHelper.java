@@ -2,7 +2,7 @@ package org.jstryker.helper;
 
 import java.lang.reflect.Field;
 
-import org.jstryker.exception.StrykerException;
+import org.jstryker.exception.JStrykerException;
 
 /**
  * Helps set and get values in fields using reflection.
@@ -21,10 +21,10 @@ public final class ReflectionHelper {
 	 * @param fieldName Name of the field.
 	 * @param value Value to be injected.
 	 * @throws IllegalArgumentException When object or fieldName is null.
-	 * @throws StrykerException When value cannot be injected.
+	 * @throws JStrykerException When value cannot be injected.
 	 */
 	public static void injectValue(Object object, String fieldName, Object value) 
-	throws StrykerException, IllegalArgumentException {
+	throws JStrykerException, IllegalArgumentException {
 
 		if (object == null) {
 			throw new IllegalArgumentException("Object cannot be null.");
@@ -40,9 +40,9 @@ public final class ReflectionHelper {
 			field.set(object, value);
 		} catch (NoSuchFieldException e) {
 			String message = String.format("%s does not have field %s.", object.getClass(), fieldName);
-			throw new StrykerException(message, e);
+			throw new JStrykerException(message, e);
 		} catch (IllegalAccessException e) {
-			throw new StrykerException(e.getMessage(), e);
+			throw new JStrykerException(e.getMessage(), e);
 		}
 	}
 
@@ -52,9 +52,9 @@ public final class ReflectionHelper {
 	 * @param fieldName Name of the field.
 	 * @return Value of the field.
 	 * @throws IllegalArgumentException When object or fieldName is null.
-	 * @throws StrykerException When value cannot be got.
+	 * @throws JStrykerException When value cannot be got.
 	 */
-	public static Object getValue(Object object, String fieldName) throws StrykerException, IllegalArgumentException {
+	public static Object getValue(Object object, String fieldName) throws JStrykerException, IllegalArgumentException {
 
 		if (object == null) {
 			throw new IllegalArgumentException("Object cannot be null.");
@@ -70,9 +70,9 @@ public final class ReflectionHelper {
 			return field.get(object);
 		} catch (NoSuchFieldException e) {
 			String message = String.format("%s does not have field %s.", object.getClass(), fieldName);
-			throw new StrykerException(message, e);
+			throw new JStrykerException(message, e);
 		} catch (IllegalAccessException e) {
-			throw new StrykerException(e.getMessage(), e);
+			throw new JStrykerException(e.getMessage(), e);
 		}
 	}
 
@@ -81,10 +81,10 @@ public final class ReflectionHelper {
 	 * @param fieldName  Name of the field.
 	 * @param value of the field
 	 * @throws IllegalArgumentException When object or fieldName is null.
-	 * @throws StrykerException When value cannot be injected.
+	 * @throws JStrykerException When value cannot be injected.
 	 */
 	public static void injectValueInStaticField(Class<?> clazz, String fieldName, Object value) 
-	throws StrykerException, IllegalArgumentException {
+	throws JStrykerException, IllegalArgumentException {
 
 		if (clazz == null) {
 			throw new IllegalArgumentException("Clazz cannot be null.");
@@ -100,9 +100,9 @@ public final class ReflectionHelper {
 			field.set(clazz, value);
 		} catch (NoSuchFieldException e) {
 			String message = String.format("%s does not have field %s.", clazz, fieldName);
-			throw new StrykerException(message, e);
+			throw new JStrykerException(message, e);
 		} catch (IllegalAccessException e) {
-			throw new StrykerException(e.getMessage(), e);
+			throw new JStrykerException(e.getMessage(), e);
 		}
 	}
 }

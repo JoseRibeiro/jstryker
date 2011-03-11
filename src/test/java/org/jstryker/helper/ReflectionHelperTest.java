@@ -11,7 +11,7 @@ import org.junit.rules.ExpectedException;
 
 import org.jstryker.domain.OnlyGet;
 import org.jstryker.domain.OnlySet;
-import org.jstryker.exception.StrykerException;
+import org.jstryker.exception.JStrykerException;
 
 /**
  * Test to {@link ReflectionHelper}.
@@ -50,7 +50,7 @@ public class ReflectionHelperTest {
 		String fieldName = "inexistentField";
 		String message = String.format("%s does not have field %s.", OnlyGet.class, fieldName);
 
-		thrown.expect(StrykerException.class);
+		thrown.expect(JStrykerException.class);
 		thrown.expectMessage(message);
 
 		ReflectionHelper.injectValue(onlyGet, fieldName, "Bob");
@@ -93,7 +93,7 @@ public class ReflectionHelperTest {
 		String fieldName = "inexistentField";
 		String message = String.format("%s does not have field %s.", OnlySet.class, fieldName);
 
-		thrown.expect(StrykerException.class);
+		thrown.expect(JStrykerException.class);
 		thrown.expectMessage(message);
 
 		ReflectionHelper.getValue(onlySet, "inexistentField");
@@ -128,7 +128,7 @@ public class ReflectionHelperTest {
 		String fieldName = "inexistentField";
 		String message = String.format("%s does not have field %s.", OnlyGet.class, fieldName);
 
-		thrown.expect(StrykerException.class);
+		thrown.expect(JStrykerException.class);
 		thrown.expectMessage(message);
 
 		ReflectionHelper.injectValueInStaticField(OnlyGet.class, fieldName, "ok");

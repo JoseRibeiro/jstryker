@@ -17,7 +17,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import org.jstryker.exception.StrykerException;
+import org.jstryker.exception.JStrykerException;
 
 /**
  * Teste para {@link ScriptRunner}.
@@ -81,7 +81,7 @@ public class ScriptRunnerTest {
 
 		InputStream sql = ScriptRunnerTest.class.getResourceAsStream("/stryker.sql");
 
-		thrown.expect(StrykerException.class);
+		thrown.expect(JStrykerException.class);
 		new ScriptRunner(connection).runScript(sql);
 	}
 

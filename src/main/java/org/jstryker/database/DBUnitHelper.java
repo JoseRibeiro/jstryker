@@ -21,8 +21,7 @@ import org.dbunit.dataset.xml.FlatXmlDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
 import org.dbunit.operation.DatabaseOperation;
 import org.dbunit.operation.TransactionOperation;
-
-import org.jstryker.exception.StrykerException;
+import org.jstryker.exception.JStrykerException;
 
 /**
  * Tool for DBUnit.
@@ -71,7 +70,7 @@ public class DBUnitHelper {
 			try {
 				connection.close();
 			} catch (SQLException e) {
-				throw new StrykerException(e.getMessage(), e);
+				throw new JStrykerException(e.getMessage(), e);
 			}
 		}
 	}
@@ -90,7 +89,7 @@ public class DBUnitHelper {
 			try {
 				connection.close();
 			} catch (SQLException e) {
-				throw new StrykerException(e.getMessage(), e);
+				throw new JStrykerException(e.getMessage(), e);
 			}
 		}
 	}
@@ -128,7 +127,7 @@ public class DBUnitHelper {
 			try {
 				connection.close();
 			} catch (SQLException e) {
-				throw new StrykerException(e.getMessage(), e);
+				throw new JStrykerException(e.getMessage(), e);
 			}
 		}
 	}
@@ -154,7 +153,7 @@ public class DBUnitHelper {
 			try {
 				connection.close();
 			} catch (SQLException e) {
-				throw new StrykerException(e.getMessage(), e);
+				throw new JStrykerException(e.getMessage(), e);
 			}
 		}
 	}
@@ -184,15 +183,15 @@ public class DBUnitHelper {
 			}
 			FlatXmlDataSet.write(dataSet, new FileOutputStream(file));
 		} catch (SQLException e) {
-			throw new StrykerException(e.getMessage(), e);
+			throw new JStrykerException(e.getMessage(), e);
 		} catch (DataSetException e) {
-			throw new StrykerException(e.getMessage(), e);
+			throw new JStrykerException(e.getMessage(), e);
 		} catch (FileNotFoundException e) {
-			throw new StrykerException(e.getMessage(), e);
+			throw new JStrykerException(e.getMessage(), e);
 		} catch (IOException e) {
-			throw new StrykerException(e.getMessage(), e);
+			throw new JStrykerException(e.getMessage(), e);
 		} catch (DatabaseUnitException e) {
-			throw new StrykerException(e.getMessage(), e);
+			throw new JStrykerException(e.getMessage(), e);
 		}
 	}
 
@@ -219,11 +218,11 @@ public class DBUnitHelper {
 			}
 			resourceAsStream.close();
 		} catch (DatabaseUnitException e) {
-			throw new StrykerException(e.getMessage(), e);
+			throw new JStrykerException(e.getMessage(), e);
 		} catch (SQLException e) {
-			throw new StrykerException(e.getMessage(), e);
+			throw new JStrykerException(e.getMessage(), e);
 		} catch (IOException e) {
-			throw new StrykerException(e.getMessage(), e);
+			throw new JStrykerException(e.getMessage(), e);
 		}
 	}
 
@@ -232,33 +231,33 @@ public class DBUnitHelper {
 	 * For certain cases, you must disable foreign key checks before truncate or delete all table data. Remember that
 	 * you must use this connection to perform the delete all or the truncate.
 	 * @param connection {@link Connection}.
-	 * @throws StrykerException If any error occurs during disable.
+	 * @throws JStrykerException If any error occurs during disable.
 	 * @see #enableMysqlForeignKeyChecks(java.sql.Connection)
 	 * @see #cleanInsert(String, java.sql.Connection)
 	 * @see #truncate(String, java.sql.Connection)
 	 * @see #truncateAndInsert(String, java.sql.Connection)
 	 */
-	public void disableMysqlForeignKeyChecks(Connection connection) throws StrykerException {
+	public void disableMysqlForeignKeyChecks(Connection connection) throws JStrykerException {
 		setMysqlForeignKeyChecks(connection, 0);
 	}
 
 	/**
 	 * Enable MySQL foreign key checks on this connection.<br>
 	 * @param connection {@link Connection}.
-	 * @throws StrykerException If any error occurs during enable.
+	 * @throws JStrykerException If any error occurs during enable.
 	 * @see #disableMysqlForeignKeyChecks(java.sql.Connection)
 	 */
-	public void enableMysqlForeignKeyChecks(Connection connection) throws StrykerException {
+	public void enableMysqlForeignKeyChecks(Connection connection) throws JStrykerException {
 		setMysqlForeignKeyChecks(connection, 1);
 	}
 
-	private void setMysqlForeignKeyChecks(Connection connection, int value) throws StrykerException {
+	private void setMysqlForeignKeyChecks(Connection connection, int value) throws JStrykerException {
 		try {
 			Statement statement = connection.createStatement();
 			statement.execute("SET @@foreign_key_checks = " + value);
 			statement.close();
 		} catch (SQLException e) {
-			throw new StrykerException(e.getMessage(), e);
+			throw new JStrykerException(e.getMessage(), e);
 		}
 	}
 }

@@ -11,7 +11,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jstryker.exception.StrykerException;
+import org.jstryker.exception.JStrykerException;
 
 /**
  * Tool to run database scripts.
@@ -69,10 +69,10 @@ public class ScriptRunner {
 	/**
 	 * Run an SQL script.
 	 * @param stream The source of the script.
-	 * @throws StrykerException When cannot execute script.
+	 * @throws JStrykerException When cannot execute script.
 	 * @throws IllegalArgumentException If stream is null.
 	 */
-	public void runScript(InputStream stream) throws StrykerException, IllegalArgumentException {
+	public void runScript(InputStream stream) throws JStrykerException, IllegalArgumentException {
 
 		if (stream == null) {
 			throw new IllegalArgumentException("Stream cannot be null.");
@@ -94,9 +94,9 @@ public class ScriptRunner {
 			}
 
 		} catch (SQLException e) {
-			throw new StrykerException(e.getMessage(), e);
+			throw new JStrykerException(e.getMessage(), e);
 		} catch (IOException e) {
-			throw new StrykerException(e.getMessage(), e);
+			throw new JStrykerException(e.getMessage(), e);
 		}
 	}
 

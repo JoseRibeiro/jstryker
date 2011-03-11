@@ -25,7 +25,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import org.mockito.InOrder;
-import org.jstryker.exception.StrykerException;
+import org.jstryker.exception.JStrykerException;
 
 /**
  * Tests for {@link DBUnitHelper}.
@@ -94,7 +94,7 @@ public class DBUnitHelperTest {
 	@Test
 	public void shouldThrowStrykerExceptionWhenSQLExceptionOccurs() throws Exception {
 		String reason = "connection does not exist";
-		thrown.expect(StrykerException.class);
+		thrown.expect(JStrykerException.class);
 		thrown.expectMessage(reason);
 
 		connection.close();
@@ -104,7 +104,7 @@ public class DBUnitHelperTest {
 	@Test
 	public void shouldThrowStrkyerExceptionWhenIOExceptionOccurs() throws Exception {
 		String reason = "java.net.MalformedURLException";
-		thrown.expect(StrykerException.class);
+		thrown.expect(JStrykerException.class);
 		thrown.expectMessage(reason);
 
 		new DBUnitHelper().cleanInsert("/unexistent-dataset.xml", connection);
@@ -143,7 +143,7 @@ public class DBUnitHelperTest {
 	public void shouldThrowStrykerExceptionWhenDataSetExceptionOccursInDataSetGenerator() throws Exception {
 		String path = "target/generatedDataSet.xml";
 		String reason = "connection does not exist";
-		thrown.expect(StrykerException.class);
+		thrown.expect(JStrykerException.class);
 		thrown.expectMessage(reason);
 
 		connection.close();
@@ -233,7 +233,7 @@ public class DBUnitHelperTest {
 
 	@Test
 	public void shouldThrowStrykerExceptionWhenSQLExceptionOccursInDisableMysqlForeignKeyChecks() throws Exception {
-		thrown.expect(StrykerException.class);
+		thrown.expect(JStrykerException.class);
 		thrown.expectMessage("connection does not exist");
 
 		connection.close();
@@ -259,7 +259,7 @@ public class DBUnitHelperTest {
 
 	@Test
 	public void shouldThrowStrykerExceptionWhenSQLExceptionOccursInEnableMysqlForeignKeyChecks() throws Exception {
-		thrown.expect(StrykerException.class);
+		thrown.expect(JStrykerException.class);
 		thrown.expectMessage("connection does not exist");
 
 		connection.close();

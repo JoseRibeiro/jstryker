@@ -7,7 +7,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
-import org.jstryker.exception.StrykerException;
+import org.jstryker.exception.JStrykerException;
 
 public final class ConnectionHelper {
 	
@@ -23,9 +23,9 @@ public final class ConnectionHelper {
 	 * First it tries to read <code>stryker.properties</code>, if there is no such file, it tries to read
 	 * <code>hibernate.properties</code>.
 	 * @return Database {@link Connection}.
-	 * @throws StrykerException If cannot read any configuration file or if an error occurs during open connection.
+	 * @throws JStrykerException If cannot read any configuration file or if an error occurs during open connection.
 	 */
-	public static Connection getConnection() throws StrykerException {
+	public static Connection getConnection() throws JStrykerException {
 		Properties properties = new Properties();
 		try {
 
@@ -56,11 +56,11 @@ public final class ConnectionHelper {
 			Class.forName(driver);
 			return DriverManager.getConnection(url, user, password); 
 		} catch (IOException e) {
-			throw new StrykerException(e.getMessage(), e);
+			throw new JStrykerException(e.getMessage(), e);
 		} catch (ClassNotFoundException e) {
-			throw new StrykerException(e.getMessage(), e);
+			throw new JStrykerException(e.getMessage(), e);
 		} catch (SQLException e) {
-			throw new StrykerException(e.getMessage(), e);
+			throw new JStrykerException(e.getMessage(), e);
 		}
 	}
 }
