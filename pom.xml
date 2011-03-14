@@ -18,9 +18,9 @@
 	</licenses>
 
 	<scm>
-		<url>https://github.com/JoseRibeiro/Stryker</url>
-		<connection>scm:git:git://github.com/JoseRibeiro/Stryker</connection>
-		<developerConnection>scm:git:git@github.com:JoseRibeiro/Stryker.git</developerConnection>
+		<url>https://github.com/JoseRibeiro/jstryker</url>
+		<connection>scm:git:git://github.com/JoseRibeiro/jstryker</connection>
+		<developerConnection>scm:git:git@github.com:JoseRibeiro/jstryker.git</developerConnection>
 	</scm>
 
 	<developers>
