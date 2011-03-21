@@ -285,4 +285,39 @@ public class DBUnitHelper {
 			throw new JStrykerException(e.getMessage(), e);
 		}
 	}
+
+	/**
+	 * Disable HSQLDB database referential integrity on this connection.<br>
+	 * For certain cases, you must disable foreign key checks before truncate or delete all table data. Remember that
+	 * you must use this connection to perform the delete all or the truncate.
+	 * @param connection {@link Connection}.
+	 * @throws JStrykerException If any error occurs during disable.
+	 * @see #enableHsqldbDatabaseReferentialIntegrity(java.sql.Connection)
+	 * @see #cleanInsert(String, java.sql.Connection)
+	 * @see #truncate(String, java.sql.Connection)
+	 * @see #truncateAndInsert(String, java.sql.Connection)
+	 */
+	public void disableHsqldbDatabaseReferentialIntegrity(Connection connection) throws JStrykerException {
+		setHsqldbDatabaseReferentialIntegrity(connection, "FALSE");
+	}
+
+	/**
+	 * Enable HSQLDB database referential integrity on this connection.<br>
+	 * @param connection {@link Connection}.
+	 * @throws JStrykerException If any error occurs during enable.
+	 * @see #disableHsqldbDatabaseReferentialIntegrity(java.sql.Connection)
+	 */
+	public void enableHsqldbDatabaseReferentialIntegrity(Connection connection) throws JStrykerException {
+		setHsqldbDatabaseReferentialIntegrity(connection, "TRUE");
+	}
+
+	private void setHsqldbDatabaseReferentialIntegrity(Connection connection, String value) {
+		try {
+			Statement statement = connection.createStatement();
+			statement.execute("SET DATABASE REFERENTIAL INTEGRITY " + value);
+			statement.close();
+		} catch (SQLException e) {
+			throw new JStrykerException(e.getMessage(), e);
+		}
+	}
 }

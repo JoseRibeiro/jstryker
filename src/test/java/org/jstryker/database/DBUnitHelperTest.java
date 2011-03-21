@@ -306,4 +306,60 @@ public class DBUnitHelperTest {
 		DBUnitHelper dbUnitHelper = new DBUnitHelper();
 		dbUnitHelper.enableMysqlForeignKeyChecks(connection);
 	}
+
+	@Test
+	public void shouldDisableHsqldbDatabaseReferentialIntegrity() throws Exception {
+		Statement statement = mock(Statement.class);
+
+		Connection connection = mock(Connection.class);
+		when(connection.createStatement()).thenReturn(statement);
+
+		DBUnitHelper dbUnitHelper = new DBUnitHelper();
+		dbUnitHelper.disableHsqldbDatabaseReferentialIntegrity(connection);
+
+		InOrder inOrder = inOrder(statement);
+		inOrder.verify(statement).execute("SET DATABASE REFERENTIAL INTEGRITY FALSE");
+		inOrder.verify(statement).close();
+	}
+
+	@Test
+	public void shouldThrowStrykerExceptionWhenSQLExceptionOccursInDisableHsqldbDatabaseReferentialIntegrity()
+			throws Exception {
+		
+		thrown.expect(JStrykerException.class);
+		thrown.expectMessage("connection does not exist");
+
+		connection.close();
+
+		DBUnitHelper dbUnitHelper = new DBUnitHelper();
+		dbUnitHelper.disableHsqldbDatabaseReferentialIntegrity(connection);
+	}
+
+	@Test
+	public void shouldEnableHsqldbDatabaseReferentialIntegrity() throws Exception {
+		Statement statement = mock(Statement.class);
+
+		Connection connection = mock(Connection.class);
+		when(connection.createStatement()).thenReturn(statement);
+
+		DBUnitHelper dbUnitHelper = new DBUnitHelper();
+		dbUnitHelper.enableHsqldbDatabaseReferentialIntegrity(connection);
+
+		InOrder inOrder = inOrder(statement);
+		inOrder.verify(statement).execute("SET DATABASE REFERENTIAL INTEGRITY TRUE");
+		inOrder.verify(statement).close();
+	}
+	
+	@Test
+	public void shouldThrowStrykerExceptionWhenSQLExceptionOccursInEnableHsqldbDatabaseReferentialIntegrity()
+			throws Exception {
+
+		thrown.expect(JStrykerException.class);
+		thrown.expectMessage("connection does not exist");
+
+		connection.close();
+
+		DBUnitHelper dbUnitHelper = new DBUnitHelper();
+		dbUnitHelper.enableHsqldbDatabaseReferentialIntegrity(connection);
+	}
 }
