@@ -1,10 +1,15 @@
 package org.jstryker.database;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.*;
+import org.apache.commons.dbutils.QueryRunner;
+import org.apache.commons.dbutils.ResultSetHandler;
+import org.dbunit.operation.DatabaseOperation;
+import org.jstryker.exception.JStrykerException;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
+import org.mockito.InOrder;
 
 import java.io.File;
 import java.io.InputStream;
@@ -12,20 +17,18 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.apache.commons.dbutils.QueryRunner;
-import org.apache.commons.dbutils.ResultSetHandler;
-import org.dbunit.operation.DatabaseOperation;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-
-import org.mockito.InOrder;
-import org.jstryker.exception.JStrykerException;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Tests for {@link DBUnitHelper}.
@@ -37,8 +40,8 @@ public class DBUnitHelperTest {
 
 	private Connection connection;
 	
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		Connection createDB = ConnectionHelper.getConnection();
 		ScriptRunner scriptRunner = new ScriptRunner(createDB);
 		InputStream sql = ScriptRunnerTest.class.getResourceAsStream("/jstryker.sql");
@@ -49,10 +52,14 @@ public class DBUnitHelperTest {
 			sql.close();
 			createDB.close();
 		}
+		connection = ConnectionHelper.getConnection();
 	}
-	
-	@AfterClass
-	public static void afterClass() throws Exception {
+
+	@After
+	public void tearDown() throws Exception {
+		if (!connection.isClosed()) {
+			connection.close();
+		}
 		Connection connection = ConnectionHelper.getConnection();
 		ScriptRunner scriptRunner = new ScriptRunner(connection);
 		InputStream sql = ScriptRunnerTest.class.getResourceAsStream("/drop-jstryker.sql");
@@ -65,16 +72,48 @@ public class DBUnitHelperTest {
 		}
 	}
 
-	@Before
-	public void setUp() throws Exception {
-		connection = ConnectionHelper.getConnection();
+	@Test
+	public void shouldInsertDataSetContent() throws Exception {
+		new DBUnitHelper().insert("/dbunit-dataset.xml");
+
+		List<Object> rows = (List<Object>) new QueryRunner().query(connection, "Select * from jstryker", new ResultSetHandler() {
+			public Object handle(ResultSet rs) throws SQLException {
+				List<Object> rows = new ArrayList<Object>();
+				
+				rs.next();
+				rows.add(rs.getInt("ID"));
+
+				rs.next();
+				rows.add(rs.getInt("ID"));
+
+				return rows;
+			}
+		});
+
+		assertEquals("Should keep database data.", 1, rows.get(0));
+		assertEquals("Should insert dataset content.", 2, rows.get(1));
 	}
 
-	@After
-	public void tearDown() throws Exception {
-		if (!connection.isClosed()) {
-			connection.close();
-		}
+	@Test
+	public void shouldInsertDataSetContentUsingConnection() throws Exception {
+		new DBUnitHelper().insert("/dbunit-dataset.xml", connection);
+
+		List<Object> rows = (List<Object>) new QueryRunner().query(connection, "Select * from jstryker", new ResultSetHandler() {
+			public Object handle(ResultSet rs) throws SQLException {
+				List<Object> rows = new ArrayList<Object>();
+
+				rs.next();
+				rows.add(rs.getInt("ID"));
+
+				rs.next();
+				rows.add(rs.getInt("ID"));
+
+				return rows;
+			}
+		});
+
+		assertEquals("Should keep database data.", 1, rows.get(0));
+		assertEquals("Should insert dataset content.", 2, rows.get(1));
 	}
 
 	@Test

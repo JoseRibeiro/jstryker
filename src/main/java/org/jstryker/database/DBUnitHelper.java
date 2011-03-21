@@ -1,16 +1,5 @@
 package org.jstryker.database;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Statement;
-
-import javax.activation.DataSource;
-
 import org.dbunit.DatabaseUnitException;
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.database.IDatabaseConnection;
@@ -22,6 +11,16 @@ import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
 import org.dbunit.operation.DatabaseOperation;
 import org.dbunit.operation.TransactionOperation;
 import org.jstryker.exception.JStrykerException;
+
+import javax.activation.DataSource;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 /**
  * Tool for DBUnit.
@@ -113,6 +112,32 @@ public class DBUnitHelper {
 	@Deprecated
 	public static void clean(String resourcePath) {
 		new DBUnitHelper().deleteAll(resourcePath);
+	}
+
+	/**
+	 * Insert dataset content into database performing a {@link TransactionOperation#INSERT} from DBUnit.
+	 * @param resourcePath Path for dbunit dataset.
+	 */
+	public void insert(String resourcePath) {
+		Connection connection = ConnectionHelper.getConnection();
+		try {
+			execute(resourcePath, connection, DatabaseOperation.INSERT);
+		} finally {
+			try {
+				connection.close();
+			} catch (SQLException e) {
+				throw new JStrykerException(e.getMessage(), e);
+			}
+		}
+	}
+
+	/**
+	 * Insert dataset content into database performing a {@link TransactionOperation#INSERT} from DBUnit.
+	 * @param resourcePath Path for dbunit dataset.
+	 * @param connection {@link Connection}.
+	 */
+	public void insert(String resourcePath, Connection connection) {
+		execute(resourcePath, connection, DatabaseOperation.INSERT);
 	}
 
 	/**
