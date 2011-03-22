@@ -141,6 +141,32 @@ public class DBUnitHelper {
 	}
 
 	/**
+	 * Delete dataset specified rows from database with a {@link TransactionOperation#DELETE} from DBUnit.
+	 * @param resourcePath Path for dbunit dataset.
+	 */
+	public void delete(String resourcePath) {
+		Connection connection = ConnectionHelper.getConnection();
+		try {
+			delete(resourcePath, connection);
+		} finally {
+			try {
+				connection.close();
+			} catch (SQLException e) {
+				throw new JStrykerException(e.getMessage(), e);
+			}
+		}
+	}
+
+	/**
+	 * Delete dataset specified rows from database with a {@link TransactionOperation#DELETE} from DBUnit.
+	 * @param resourcePath Path for dbunit dataset.
+	 * @param connection {@link Connection}.
+	 */
+	public void delete(String resourcePath, Connection connection) {
+		execute(resourcePath, connection, DatabaseOperation.DELETE);
+	}
+
+	/**
 	 * Clean the database with a {@link TransactionOperation#DELETE_ALL} from DBUnit.
 	 * @param resourcePath Path for dbunit dataset.
 	 */

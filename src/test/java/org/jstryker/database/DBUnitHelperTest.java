@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
@@ -208,6 +209,46 @@ public class DBUnitHelperTest {
 		});
 
 		assertEquals("Should return the dataset ID.", 2, id);
+	}
+
+	@Test
+	public void shouldDeleteData() throws Exception {
+		DBUnitHelper dbUnitHelper = spy(new DBUnitHelper());
+
+		String resourcePath = "/dbunit-dataset.xml";
+		dbUnitHelper.delete(resourcePath);
+
+		verify(dbUnitHelper).delete(eq(resourcePath), any(Connection.class));
+	}
+
+	@Test
+	public void shouldDeleteDataWithSpecifiedConnection() throws Exception {
+		DBUnitHelper dbUnitHelper = new DBUnitHelper();
+		dbUnitHelper.insert("/dbunit-dataset.xml", connection);
+		int datasetRowId = (Integer) new QueryRunner().query(connection, "Select * from jstryker where id=2", new ResultSetHandler() {
+			public Object handle(ResultSet rs) throws SQLException {
+				rs.next();
+				return rs.getInt("ID");
+			}
+		});
+		assertEquals("Should have dataset row.", 2, datasetRowId);
+
+		dbUnitHelper.delete("/dbunit-dataset.xml", connection);
+
+		int id = (Integer) new QueryRunner().query(connection, "Select * from jstryker", new ResultSetHandler() {
+			public Object handle(ResultSet rs) throws SQLException {
+				rs.next();
+				return rs.getInt("ID");
+			}
+		});
+		assertEquals("Should have original row created by jstryker.sql.", 1, id);
+
+		boolean hasNext = (Boolean) new QueryRunner().query(connection, "Select * from jstryker where id=2", new ResultSetHandler() {
+			public Object handle(ResultSet rs) throws SQLException {
+				return rs.next();
+			}
+		});
+		assertFalse("Should delete dataset row.", hasNext);
 	}
 
 	@Test
