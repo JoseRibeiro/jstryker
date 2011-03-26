@@ -1,5 +1,16 @@
 package org.jstryker.database;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+import javax.activation.DataSource;
+
 import org.dbunit.DatabaseUnitException;
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.database.IDatabaseConnection;
@@ -12,41 +23,10 @@ import org.dbunit.operation.DatabaseOperation;
 import org.dbunit.operation.TransactionOperation;
 import org.jstryker.exception.JStrykerException;
 
-import javax.activation.DataSource;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Statement;
-
 /**
  * Tool for DBUnit.
  */
 public class DBUnitHelper {
-
-	/**
-	 * Reset the database to dataset content.
-	 * @param resourcePath Path for dbunit dataset.
-	 * @deprecated By {@link #cleanInsert(String)}
-	 */
-	@Deprecated
-	public static void init(String resourcePath) {
-		new DBUnitHelper().cleanInsert(resourcePath);
-	}
-
-	/**
-	 * Reset the database to dataset content.
-	 * @param resourcePath Path for dbunit dataset.
-	 * @param connection {@link Connection}.
-	 * @deprecated By {@link #cleanInsert(String, Connection)}.
-	 */
-	@Deprecated
-	public static void init(String resourcePath, Connection connection) {
-		new DBUnitHelper().cleanInsert(resourcePath, connection);
-	}
 
 	/**
 	 * Reset the database to dataset content performing a {@link TransactionOperation#CLEAN_INSERT} from DBUnit.
@@ -102,16 +82,6 @@ public class DBUnitHelper {
 	public void truncateAndInsert(String resourcePath, Connection connection) {
 		execute(resourcePath, connection, TransactionOperation.TRUNCATE_TABLE);
 		execute(resourcePath, connection, TransactionOperation.INSERT);
-	}
-
-	/**
-	 * Clean the database.
-	 * @param resourcePath Path for dbunit dataset.
-	 * @deprecated By {@link #deleteAll(String)}
-	 */
-	@Deprecated
-	public static void clean(String resourcePath) {
-		new DBUnitHelper().deleteAll(resourcePath);
 	}
 
 	/**
