@@ -16,4 +16,8 @@ public class JStrykerException extends RuntimeException {
 	public JStrykerException(String message, Throwable exception) {
 		super(message, exception);
 	}
+	
+	public JStrykerException(String message) {
+		super(message);
+	}
 }
