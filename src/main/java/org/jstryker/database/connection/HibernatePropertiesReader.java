@@ -9,13 +9,6 @@ public class HibernatePropertiesReader implements ConnectionPropertiesReader {
 	private String url;
 	private String driver;
 
-	public HibernatePropertiesReader(Properties properties) {
-		driver = properties.getProperty("hibernate.connection.driver_class");
-		password = properties.getProperty("hibernate.connection.password");
-		username = properties.getProperty("hibernate.connection.username");
-		url = properties.getProperty("hibernate.connection.url");
-	}
-
 	public String getPassword() {
 		return password;
 	}
@@ -30,5 +23,16 @@ public class HibernatePropertiesReader implements ConnectionPropertiesReader {
 
 	public String getDriver() {
 		return driver;
+	}
+
+	public String getPropertyName() {
+		return "/hibernate.properties";
+	}
+
+	public void read(Properties properties) {
+		driver = properties.getProperty("hibernate.connection.driver_class");
+		password = properties.getProperty("hibernate.connection.password");
+		username = properties.getProperty("hibernate.connection.username");
+		url = properties.getProperty("hibernate.connection.url");
 	}
 }

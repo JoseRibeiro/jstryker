@@ -132,7 +132,7 @@ public class DBUnitHelperTest {
 	}
 
 	@Test
-	public void shouldThrowStrykerExceptionWhenSQLExceptionOccurs() throws Exception {
+	public void shouldThrowJStrykerExceptionWhenSQLExceptionOccurs() throws Exception {
 		String reason = "connection does not exist";
 		thrown.expect(JStrykerException.class);
 		thrown.expectMessage(reason);
@@ -142,7 +142,7 @@ public class DBUnitHelperTest {
 	}
 
 	@Test
-	public void shouldThrowStrkyerExceptionWhenIOExceptionOccurs() throws Exception {
+	public void shouldThrowJStrkyerExceptionWhenIOExceptionOccurs() throws Exception {
 		String reason = "java.net.MalformedURLException";
 		thrown.expect(JStrykerException.class);
 		thrown.expectMessage(reason);
@@ -180,7 +180,7 @@ public class DBUnitHelperTest {
 	}
 
 	@Test
-	public void shouldThrowStrykerExceptionWhenDataSetExceptionOccursInDataSetGenerator() throws Exception {
+	public void shouldThrowJStrykerExceptionWhenDataSetExceptionOccursInDataSetGenerator() throws Exception {
 		String path = "target/generatedDataSet.xml";
 		String reason = "connection does not exist";
 		thrown.expect(JStrykerException.class);
@@ -312,7 +312,7 @@ public class DBUnitHelperTest {
 	}
 
 	@Test
-	public void shouldThrowStrykerExceptionWhenSQLExceptionOccursInDisableMysqlForeignKeyChecks() throws Exception {
+	public void shouldThrowJStrykerExceptionWhenSQLExceptionOccursInDisableMysqlForeignKeyChecks() throws Exception {
 		thrown.expect(JStrykerException.class);
 		thrown.expectMessage("connection does not exist");
 
@@ -338,7 +338,7 @@ public class DBUnitHelperTest {
 	}
 
 	@Test
-	public void shouldThrowStrykerExceptionWhenSQLExceptionOccursInEnableMysqlForeignKeyChecks() throws Exception {
+	public void shouldThrowJStrykerExceptionWhenSQLExceptionOccursInEnableMysqlForeignKeyChecks() throws Exception {
 		thrown.expect(JStrykerException.class);
 		thrown.expectMessage("connection does not exist");
 
@@ -364,7 +364,7 @@ public class DBUnitHelperTest {
 	}
 
 	@Test
-	public void shouldThrowStrykerExceptionWhenSQLExceptionOccursInDisableHsqldbDatabaseReferentialIntegrity()
+	public void shouldThrowJStrykerExceptionWhenSQLExceptionOccursInDisableHsqldbDatabaseReferentialIntegrity()
 			throws Exception {
 		
 		thrown.expect(JStrykerException.class);
@@ -392,7 +392,7 @@ public class DBUnitHelperTest {
 	}
 	
 	@Test
-	public void shouldThrowStrykerExceptionWhenSQLExceptionOccursInEnableHsqldbDatabaseReferentialIntegrity()
+	public void shouldThrowJStrykerExceptionWhenSQLExceptionOccursInEnableHsqldbDatabaseReferentialIntegrity()
 			throws Exception {
 
 		thrown.expect(JStrykerException.class);

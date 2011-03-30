@@ -3,12 +3,23 @@ package org.jstryker.database;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.jstryker.database.connection.ConnectionPropertiesReader;
 import org.jstryker.database.connection.ConnectionPropertiesReaderFactory;
+import org.jstryker.database.connection.HibernatePropertiesReader;
+import org.jstryker.database.connection.JStrykerPropertiesReader;
 import org.jstryker.exception.JStrykerException;
 
 public final class ConnectionHelper {
+	
+	private static final List<ConnectionPropertiesReader> PROPERTIES_READERS = new ArrayList<ConnectionPropertiesReader>();
+	
+	static {
+		PROPERTIES_READERS.add(new JStrykerPropertiesReader());
+		PROPERTIES_READERS.add(new HibernatePropertiesReader());
+	}
 	
 	/**
 	 * Cannot be instantiate.
@@ -26,7 +37,7 @@ public final class ConnectionHelper {
 	 */
 	public static Connection getConnection() throws JStrykerException {
 		try {
-			ConnectionPropertiesReader propertiesReader = new ConnectionPropertiesReaderFactory().getConnectionPropertiesReader();
+			ConnectionPropertiesReader propertiesReader = new ConnectionPropertiesReaderFactory(PROPERTIES_READERS).getConnectionPropertiesReader();
 			Class.forName(propertiesReader.getDriver());
 			return DriverManager.getConnection(propertiesReader.getUrl(), propertiesReader.getUsername(), propertiesReader.getPassword()); 
 		} catch (ClassNotFoundException e) {

@@ -9,13 +9,6 @@ public class JStrykerPropertiesReader implements ConnectionPropertiesReader {
 	private String url;
 	private String driver;
 
-	public JStrykerPropertiesReader(Properties properties) {
-		driver = properties.getProperty("driver");
-		password = properties.getProperty("password");
-		username = properties.getProperty("user");
-		url = properties.getProperty("jdbc.url");
-	}
-
 	public String getPassword() {
 		return password;
 	}
@@ -30,5 +23,16 @@ public class JStrykerPropertiesReader implements ConnectionPropertiesReader {
 
 	public String getDriver() {
 		return driver;
+	}
+
+	public String getPropertyName() {
+		return "/jstryker.properties";
+	}
+
+	public void read(Properties properties) {
+		driver = properties.getProperty("driver");
+		password = properties.getProperty("password");
+		username = properties.getProperty("user");
+		url = properties.getProperty("jdbc.url");
 	}
 }
