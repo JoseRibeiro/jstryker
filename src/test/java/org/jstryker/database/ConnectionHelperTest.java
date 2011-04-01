@@ -1,10 +1,10 @@
 package org.jstryker.database;
 
-import static org.junit.Assert.assertNotNull;
-
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+
+import static org.junit.Assert.assertNotNull;
 
 /**
  * Tests for {@link ConnectionHelper}.
@@ -21,7 +21,7 @@ public class ConnectionHelperTest {
 	}
 	
 	@Test
-	public void shouldGetConnectionFromStrykerProperties() throws Exception {
-		assertNotNull("Should get connection from jstryker.properties.", ConnectionHelper.getConnection());
+	public void shouldCreateANewConnection() throws Exception {
+		assertNotNull(ConnectionHelper.getConnection());
 	}
 }

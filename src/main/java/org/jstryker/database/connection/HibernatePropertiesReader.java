@@ -25,8 +25,8 @@ public class HibernatePropertiesReader implements ConnectionPropertiesReader {
 		return driver;
 	}
 
-	public String getPropertyName() {
-		return "/hibernate.properties";
+	public String getPropertiesFileName() {
+		return "hibernate.properties";
 	}
 
 	public void read(Properties properties) {

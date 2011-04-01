@@ -1,11 +1,11 @@
 package org.jstryker.database.connection;
 
+import org.jstryker.exception.JStrykerException;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Properties;
-
-import org.jstryker.exception.JStrykerException;
 
 public class ConnectionPropertiesReaderFactory {
 
@@ -18,7 +18,7 @@ public class ConnectionPropertiesReaderFactory {
 	public ConnectionPropertiesReader getConnectionPropertiesReader() throws JStrykerException {
 		try {
 			for (ConnectionPropertiesReader reader : propertiesReader) {
-				InputStream stream = getClass().getResourceAsStream(reader.getPropertyName());
+				InputStream stream = getClass().getResourceAsStream("/" + reader.getPropertiesFileName());
 				if (stream != null) {
 					Properties properties = new Properties();
 					properties.load(stream);
@@ -32,6 +32,6 @@ public class ConnectionPropertiesReaderFactory {
 			throw new JStrykerException(e.getMessage(), e);
 		}
 		
-		throw new JStrykerException("jstryker.properties and hibernate.properties not found in classpath.");
+		throw new JStrykerException("jstryker.properties or hibernate.properties not found in classpath.");
 	}
 }

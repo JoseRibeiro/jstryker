@@ -25,8 +25,8 @@ public class JStrykerPropertiesReader implements ConnectionPropertiesReader {
 		return driver;
 	}
 
-	public String getPropertyName() {
-		return "/jstryker.properties";
+	public String getPropertiesFileName() {
+		return "jstryker.properties";
 	}
 
 	public void read(Properties properties) {
