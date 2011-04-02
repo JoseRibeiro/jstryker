@@ -13,7 +13,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Opens database connection.
+ * <p>Opens database connection.</p>
+ * <p>It's possible read connection properties from jstryker.properties or hibernate.properties.</p>
+ * <p><code>jstryker.properties</code> has its properties described below:</p>
+ * <ul>
+ *   <li><code>driver</code>: JDBC driver class. Ex.: org.hsqldb.jdbcDriver.
+ *   <li><code>jdbc.url</code>: Connection URL. Ex.: jdbc:hsqldb:mem:jstryker.
+ *   <li><code>user</code>: Username. Ex.: root.
+ *   <li><code>password</code>: Password. Ex.: str0ngpazz.
+ * </ul>
  */
 public final class ConnectionHelper {
 
