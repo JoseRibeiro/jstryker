@@ -1,6 +1,5 @@
 package org.jstryker.database;
 
-import org.jstryker.helper.HibernateHelper;
 import org.jstryker.helper.ReflectionHelper;
 import org.junit.Test;
 
@@ -22,7 +21,8 @@ public class JPAHelperTest {
 
 	@Test
 	public void shouldConfigureEntityManagerFactoryOnlyOnce() throws Exception {
-		assertSame(JPAHelper.entityManagerFactory(), JPAHelper.entityManagerFactory());
+		String persistenceUnitName = "persistenceUnitName";
+		assertSame(JPAHelper.entityManagerFactory(persistenceUnitName), JPAHelper.entityManagerFactory(persistenceUnitName));
 	}
 
 	@Test
