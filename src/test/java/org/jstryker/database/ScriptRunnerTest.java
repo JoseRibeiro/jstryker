@@ -20,7 +20,7 @@ import org.junit.rules.ExpectedException;
 import org.jstryker.exception.JStrykerException;
 
 /**
- * Teste para {@link ScriptRunner}.
+ * Tests for {@link ScriptRunner}.
  */
 public class ScriptRunnerTest {
 

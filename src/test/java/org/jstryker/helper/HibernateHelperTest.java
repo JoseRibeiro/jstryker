@@ -1,5 +1,9 @@
 package org.jstryker.helper;
 
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.junit.Test;
+
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertSame;
@@ -8,12 +12,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import org.hibernate.Session;
-import org.hibernate.Transaction;
-import org.junit.Test;
-
 /**
- * Test to {@link HibernateHelper}.
+ * Tests for {@link HibernateHelper}.
  */
 public class HibernateHelperTest {
 	
@@ -30,12 +30,12 @@ public class HibernateHelperTest {
 	}
 	
 	@Test
-	public void shouldRetrieveCurrenteSessionWhenSessionWasOpened() throws Exception {
+	public void shouldRetrieveCurrentSessionWhenSessionWasOpened() throws Exception {
 		assertSame(HibernateHelper.currentSession(), HibernateHelper.currentSession());
 	}
 	
 	@Test
-	public void shouldRollbackSessionWhenClose() throws Exception {
+	public void shouldRollbackTransactionOnClose() throws Exception {
 		Transaction transaction = mock(Transaction.class);
 		
 		Session session = mock(Session.class);
@@ -48,7 +48,7 @@ public class HibernateHelperTest {
 	}
 	
 	@Test
-	public void shouldCloseSessionWhenClose() throws Exception {
+	public void shouldCloseSessionOnClose() throws Exception {
 		Transaction transaction = mock(Transaction.class);
 		
 		Session session = mock(Session.class);
@@ -61,7 +61,7 @@ public class HibernateHelperTest {
 	}
 	
 	@Test
-	public void shouldCleanCurrenteSessionWhenClose() throws Exception {
+	public void shouldCleanCurrentSessionOnClose() throws Exception {
 		Transaction transaction = mock(Transaction.class);
 		
 		Session session = mock(Session.class);

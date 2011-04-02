@@ -2,6 +2,7 @@ package org.jstryker.database.connection;
 
 import java.util.Properties;
 
+// TODO javadoc
 public interface ConnectionPropertiesReader {
 	
 	String getUsername();

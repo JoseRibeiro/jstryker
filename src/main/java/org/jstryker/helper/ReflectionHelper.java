@@ -1,8 +1,8 @@
 package org.jstryker.helper;
 
-import java.lang.reflect.Field;
-
 import org.jstryker.exception.JStrykerException;
+
+import java.lang.reflect.Field;
 
 /**
  * Helps set and get values in fields using reflection.

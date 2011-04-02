@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Properties;
 
+// TODO javadoc
 public class ConnectionPropertiesReaderFactory {
 
 	private final List<ConnectionPropertiesReader> propertiesReader;
