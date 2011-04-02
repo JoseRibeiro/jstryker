@@ -15,7 +15,7 @@ Examples
 1 - Run database script
 
     ScriptRunner scriptRunner = new ScriptRunner(connection);
-    InputStream sql = ClassUnderTest.class.getResourceAsStream("/stryker.sql");
+    InputStream sql = ClassUnderTest.class.getResourceAsStream("/jstryker.sql");
     scriptRunner.runScript(sql);
 
 2 - DBunit
