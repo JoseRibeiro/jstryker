@@ -1,4 +1,4 @@
-package org.jstryker;
+package org.jstryker.reflection;
 
 import javax.annotation.Resource;
 import javax.annotation.Resources;

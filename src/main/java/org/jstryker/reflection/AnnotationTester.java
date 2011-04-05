@@ -1,4 +1,4 @@
-package org.jstryker;
+package org.jstryker.reflection;
 
 public class AnnotationTester {
 

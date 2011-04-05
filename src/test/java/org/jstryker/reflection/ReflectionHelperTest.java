@@ -1,4 +1,4 @@
-package org.jstryker.helper;
+package org.jstryker.reflection;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;

@@ -1,4 +1,4 @@
-package org.jstryker.helper;
+package org.jstryker.database;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;

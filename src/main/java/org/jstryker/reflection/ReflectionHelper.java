@@ -1,4 +1,4 @@
-package org.jstryker.helper;
+package org.jstryker.reflection;
 
 import org.jstryker.exception.JStrykerException;
 
