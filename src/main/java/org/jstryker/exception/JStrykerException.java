@@ -17,6 +17,11 @@ public class JStrykerException extends RuntimeException {
 		super(message, exception);
 	}
 	
+	/**
+	 * Constructs a new {@link JStrykerException} exception with the specified detail message.
+	 * @param message The detail message.
+	 * @see {@link RuntimeException#RuntimeException(String)}.
+	 */
 	public JStrykerException(String message) {
 		super(message);
 	}
