@@ -1,0 +1,312 @@
+/*
+	global
+*/
+* {
+	padding:0;
+	margin:0;
+}
+body {
+	font-family:Geneva, Arial, Helvetica, sans-serif;
+	font-size:1.0em;
+	background-color:#232323;
+	margin:0 auto;
+	padding:0;
+	background-image:url('images/topbg.jpg');
+	background-repeat:repeat-x;
+	height:100%;
+	background-position:top left;
+}
+
+/*
+	structure 
+*/
+div#wrap {
+	min-height: 100%;
+	background-image:url('images/bottombg.jpg');
+	background-repeat:repeat-x;
+	background-position:bottom left;
+}
+div#container {
+	width:85%;
+	margin:0 auto;
+	padding:0;
+}
+div#content {
+	min-height:400px;
+	background-color:#ffffff;
+}
+div#header {
+	padding-left:10px;
+	padding-top:55px;
+}
+div.sidebar {
+	width:30%;
+	float:right;
+	padding-top:5px;
+}
+div.page {
+	width:65%;
+	float:left;
+	padding:5px 0 0 5px;
+}
+div.page-wrap {
+	background-color:#333333;
+	padding:5px;
+	color:#ffffff;
+} 
+div.top-panel {
+	background-image:url('images/panelbg.jpg');
+	background-repeat:repeat-x;
+	background-position:bottom left;
+	background-color:#43CE00;
+	padding:30px 15px;
+}
+
+
+
+/* 
+	nav 
+*/
+div#nav {
+	background-color:#333333;
+}
+div#nav ul {
+	list-style:none;
+	margin:0;
+	padding:0;
+	font-size:1.0em
+}
+div#nav ul li {
+	display:inline;
+	float:left;
+	margin:5px;
+}
+div#nav ul li a {
+	color:#ffffff;
+	font-size:0.9em;
+	font-weight:bold;
+	text-decoration:none;
+	float:left;
+	padding:5px 10px;
+}
+div#nav ul li a.selected, div#nav ul li a.selected:hover {
+	background-color:#666666;
+}
+div#nav ul li a:hover {
+	background-color:#151515;
+}
+
+
+
+/*
+	paragraphs
+*/
+form p {
+	padding:5px 0;
+}
+p {
+	margin:0;
+	font-size:0.9em;
+	line-height:1.5em;
+	padding:0;
+}
+div.top-panel p {
+	font-family:"Trebuchet MS",Verdana,Arial;
+	line-height:1.6em;
+	margin:0;
+	color:#ffffff;
+	padding:0;
+	text-align:left;
+	font-size:0.8em;
+}
+div.page p {
+	padding-bottom:15px;
+	line-height:1.7em;
+}
+div#footer p {	
+	padding:15px 0;
+	margin:0;
+	font-size:0.7em;
+	color:#ffffff;
+}
+
+
+
+/*
+	headers
+*/
+div#header h1 {
+	font-size:2.9em;
+}
+h2 {
+	font-family:Geneva,Arial,Helvetica,sans-serif;
+	font-weight:normal;
+	margin:0px 0 10px 0;
+	padding:0;
+	font-size:1.1em;
+	color:#666666;
+	text-align:left;
+}
+div.top-panel h2 {
+	color:#ffffff;
+	letter-spacing:0px;
+	margin:0;
+	padding:0;
+	font-family:"Trebuchet MS", Verdana, Arial;
+}
+h3 {
+	color:#ffffff;
+	font-family:Geneva,Arial,Helvetica,sans-serif;
+	font-size:1.6em;
+	font-weight:normal;
+	letter-spacing:-1px;
+	margin:0;
+	padding:0;
+}
+h4 {
+	color:gray;
+	padding:0;
+	font-size:1.2em;
+	margin:0;
+}
+div.sidebar h4 {
+	font-weight:normal;
+}
+
+
+
+
+/*
+	forms, labels, inputs
+*/
+input.button {
+	font-weight:bold;
+	padding:5px 15px;
+}
+input, textarea {
+	padding:3px;
+	background-color:#ffffff;
+	border:1px solid #dddddd;
+}
+input:focus, textarea:focus {
+	background-color:#CCFFB3;
+	border:1px solid #AAFF80;
+}
+label {
+	font-weight:bold;
+}
+
+
+
+
+/*
+	links
+*/
+a {
+	color:#349E00;
+}
+div#header h1 a {
+	color:#42CB00;
+	text-decoration:none;
+	font-weight:normal;
+}
+div.sidebar ul li a {
+	display:block;
+	text-decoration:none;
+	padding:5px 0;
+	/*border-bottom:1px solid #dddddd;*/
+}
+div.sidebar a {
+	color:#329900;
+	font-size:0.9em;
+	font-family:Arial, Helvetica, sans-serif;
+	line-height:1.4em;
+}
+a:hover, div.sidebar a:hover  {
+	color:#226600;
+}
+div.top-panel a {
+	border-bottom:1px solid #fff;
+	color:#fff;
+	font-family:Geneva,Arial,Helvetica,sans-serif;
+	font-size:1.3em;
+	font-weight:bold;
+	margin:10px;
+	text-decoration:none;
+}
+div.top-panel a.linkleft {
+	margin-left:0; 
+}
+div#footer p a {
+	color:#ffffff;
+	text-decoration:none;
+	font-size:1.0em;
+}
+
+
+
+/*
+	tabbles
+*/
+table {
+	width:100%;
+	font-size:0.85em;
+}
+table tr th {
+	color:#ffffff;
+	background-color:#171717;
+}
+table tr th, table tr td {
+	padding:5px 10px;
+	text-align:left;
+}
+table tr td {
+	border-bottom:1px solid #dddddd;
+}
+
+
+
+/*
+	lists
+*/
+div.sidebar ul {
+	list-style:none;
+	padding:0;
+	border-top:4px solid #dddddd;
+	margin:0 0 20px 0
+}
+ul {
+	margin:0 0 20px 20px;
+	font-size:0.9em;
+	padding:0;
+	list-style:square;
+}
+ul li {
+	padding:3px 0;
+}
+
+
+
+/*
+	miscs
+*/
+code {
+	border:1px solid #cccccc;
+	background-color:#dddddd;
+	color:#333333;
+	display:block;
+	padding:10px 5px;
+	margin:10px 0;
+}
+.clear {
+	clear:both; 
+}
+.right { 
+	float:right; 
+}
+.left  {
+	float:left;  
+}
+*:focus {
+	outline:none;
+}
