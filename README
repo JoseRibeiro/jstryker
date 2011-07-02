@@ -10,38 +10,6 @@ Rodolfo Liviero
 http://github.com/rodolfoliviero
 http://twitter.com/rodolfoliviero
 
-Examples
-
-1 - Run database script
-
-    ScriptRunner scriptRunner = new ScriptRunner(connection);
-    InputStream sql = ClassUnderTest.class.getResourceAsStream("/jstryker.sql");
-    scriptRunner.runScript(sql);
-
-2 - DBunit
-
- 2.1 - Clean database and insert data from dbunit.
-       DBUnitHelper.init("/dbunit-dataset.xml", connection);
- 2.2 - Generate dataset from datatabase
-       DBUnitHelper.generateDataSet(path, connection);
-
-3 - Reflection to test software where is hard to refactoring and there are much code smell.
-
- 3.1 - Set value
-       ReflectionHelper.injectValue(object, "propertyName", value);
- 3.2 - Get value
-       ReflectionHelper.getValue(object, "propertyName");
- 3.3 - Set value in static field
-       ReflectionHelper.injectValueInStaticField(object, "propertyName",  value);
-
-4 - Test Annotation
-
-  4.1 - Test if annotation is present
-          AnnotationTester.isAnnotationPresent(Annotated.class, AnnotationToBeVerified.class);
-
-5 - Hibernate and DBunit Integration
-
-  5.1 - If you have hibernate.properties in classpath just do that.
-        DBUnitHelper.init("/dbunit-dataset.xml");
-
-More features are comming. 
+We are making an effort to document all the features. We are going up the examples in this folder https://github.com/JoseRibeiro/jstryker/tree/master/samples
+You can look at the tests and the javadocs for more information.
+Forks and patches are always welcome
