@@ -103,7 +103,7 @@ public class DBUnitHelper {
 				}
 				
 				Column annotation = field.getAnnotation(Column.class);
-				if (annotation != null && annotation.name() != null) {
+				if (annotation != null && !"".equals(annotation.name())) {
 					builder.append(annotation.name());
 				} else {
 					builder.append(field.getName());
@@ -116,7 +116,8 @@ public class DBUnitHelper {
 			
 			builder.append("/>\n</dataset>");
 			
-			execute(null, connection, new ByteArrayInputStream(builder.toString().getBytes()), databaseOperation);
+			String string = builder.toString();
+			execute(null, connection, new ByteArrayInputStream(string.getBytes()), databaseOperation);
 		} catch (IllegalAccessException e) {
 			throw new JStrykerException(e.getMessage(), e);
 		}
