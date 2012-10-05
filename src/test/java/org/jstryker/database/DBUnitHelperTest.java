@@ -1,5 +1,35 @@
 package org.jstryker.database;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.ResultSetHandler;
 import org.dbunit.operation.DatabaseOperation;
@@ -10,26 +40,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.mockito.InOrder;
-
-import java.io.File;
-import java.io.InputStream;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 /**
  * Tests for {@link DBUnitHelper}.
@@ -402,5 +412,281 @@ public class DBUnitHelperTest {
 
 		DBUnitHelper dbUnitHelper = new DBUnitHelper();
 		dbUnitHelper.enableHsqldbDatabaseReferentialIntegrity(connection);
+	}
+
+	@Test
+	public void shouldInsertEntityObjectWithTransientDataSource() throws Exception {
+		JstrykerEntityWithTransient jstrykerEntity = new JstrykerEntityWithTransient(3, "Tools to help automated tests in java", "Dummy");
+		
+		new DBUnitHelper().insert(jstrykerEntity);
+		
+		int id = (Integer) new QueryRunner().query(connection, "Select * from jstryker where id = 3", new ResultSetHandler() {
+			public Object handle(ResultSet rs) throws SQLException {
+				rs.next();
+				return rs.getInt("ID");
+			}
+		});
+
+		assertEquals("Should return the dataset ID.", 3, id);
+	}
+	
+	@Test
+	public void shouldSaveEntityObjectWithTransientDataSourceToDataSetContent() throws Exception {
+		JstrykerEntityWithTransient jstrykerEntity = new JstrykerEntityWithTransient(3, "Tools to help automated tests in java", "Dummy");
+		
+		new DBUnitHelper().cleanInsert(jstrykerEntity);
+
+		int id = (Integer) new QueryRunner().query(connection, "Select * from jstryker", new ResultSetHandler() {
+			public Object handle(ResultSet rs) throws SQLException {
+				rs.next();
+				return rs.getInt("ID");
+			}
+		});
+
+		assertEquals("Should return the dataset ID.", 3, id);
+	}
+
+	@Test
+	public void shouldInsertEntityObjectWithTransientDataSourceWithConnectionParameter() throws Exception {
+		JstrykerEntityWithTransient jstrykerEntity = new JstrykerEntityWithTransient(3, "Tools to help automated tests in java", "Dummy");
+		
+		new DBUnitHelper().insert(jstrykerEntity, connection);
+
+		connection = ConnectionHelper.getConnection();
+		int id = (Integer) new QueryRunner().query(connection, "Select * from jstryker where id = 3", new ResultSetHandler() {
+			public Object handle(ResultSet rs) throws SQLException {
+				rs.next();
+				return rs.getInt("ID");
+			}
+		});
+
+		assertEquals("Should return the dataset ID.", 3, id);
+	}
+	
+	@Test
+	public void shouldSaveEntityObjectWithTransientDataSourceToDataSetContentWithConnectionParameter() throws Exception {
+		JstrykerEntityWithTransient jstrykerEntity = new JstrykerEntityWithTransient(3, "Tools to help automated tests in java", "Dummy");
+		
+		new DBUnitHelper().cleanInsert(jstrykerEntity, connection);
+
+		connection = ConnectionHelper.getConnection();
+		int id = (Integer) new QueryRunner().query(connection, "Select * from jstryker", new ResultSetHandler() {
+			public Object handle(ResultSet rs) throws SQLException {
+				rs.next();
+				return rs.getInt("ID");
+			}
+		});
+
+		assertEquals("Should return the dataset ID.", 3, id);
+	}
+
+	@Test
+	public void shouldSaveEntityObjectWithoutColumnDataSourceToDataSetContent() throws Exception {
+		JstrykerEntityWithoutColumn jstrykerEntity = new JstrykerEntityWithoutColumn(3, "Tools to help automated tests in java");
+		
+		new DBUnitHelper().cleanInsert(jstrykerEntity);
+
+		int id = (Integer) new QueryRunner().query(connection, "Select * from jstryker", new ResultSetHandler() {
+			public Object handle(ResultSet rs) throws SQLException {
+				rs.next();
+				return rs.getInt("ID");
+			}
+		});
+
+		assertEquals("Should return the dataset ID.", 3, id);
+	}
+
+	@Test
+	public void shouldSaveEntityObjectWithoutColumnDataSourceToDataSetContentWithConnectionParameter() throws Exception {
+		JstrykerEntityWithoutColumn jstrykerEntity = new JstrykerEntityWithoutColumn(3, "Tools to help automated tests in java");
+		
+		new DBUnitHelper().cleanInsert(jstrykerEntity, connection);
+
+		connection = ConnectionHelper.getConnection();
+		int id = (Integer) new QueryRunner().query(connection, "Select * from jstryker", new ResultSetHandler() {
+			public Object handle(ResultSet rs) throws SQLException {
+				rs.next();
+				return rs.getInt("ID");
+			}
+		});
+
+		assertEquals("Should return the dataset ID.", 3, id);
+	}
+
+	@Test
+	public void shouldResetDataBaseWithEntityObjectToDataSetContentWithTruncateTable() throws Exception {
+		DBUnitHelper dbUnitHelper = spy(new DBUnitHelper());
+		JstrykerEntityWithoutColumn jstrykerEntity = new JstrykerEntityWithoutColumn(3, "Tools to help automated tests in java");
+		
+		dbUnitHelper.truncateAndInsert(jstrykerEntity);
+		
+		InOrder inOrder = inOrder(dbUnitHelper);
+		inOrder.verify(dbUnitHelper).executeOperation(anyString(), any(Connection.class), any(ByteArrayInputStream.class), eq(DatabaseOperation.TRUNCATE_TABLE));
+		inOrder.verify(dbUnitHelper).executeOperation(anyString(), any(Connection.class), any(ByteArrayInputStream.class), eq(DatabaseOperation.INSERT));
+	}
+
+	@Test
+	public void shouldResetDataBaseWithEntityObjectToDataSetContentWithTruncateTableUsingSpecifiedConnection() throws Exception {
+		DBUnitHelper dbUnitHelper = spy(new DBUnitHelper());
+		JstrykerEntityWithoutColumn jstrykerEntity = new JstrykerEntityWithoutColumn(3, "Tools to help automated tests in java");
+		
+		dbUnitHelper.truncateAndInsert(connection, Arrays.asList(jstrykerEntity));
+		
+		InOrder inOrder = inOrder(dbUnitHelper);
+		inOrder.verify(dbUnitHelper).executeOperation(anyString(), eq(connection), any(ByteArrayInputStream.class), eq(DatabaseOperation.TRUNCATE_TABLE));
+		inOrder.verify(dbUnitHelper).executeOperation(anyString(), eq(connection), any(ByteArrayInputStream.class), eq(DatabaseOperation.INSERT));
+	}
+
+	@Test
+	public void shouldResetDataBaseWithListByEntityObjectToDataSetContentWithTruncateTableUsingSpecifiedConnection() throws Exception {
+		DBUnitHelper dbUnitHelper = spy(new DBUnitHelper());
+		List<JstrykerEntityWithoutColumn> list = new ArrayList<JstrykerEntityWithoutColumn>();
+		JstrykerEntityWithoutColumn jstrykerEntity = new JstrykerEntityWithoutColumn(3, "Tools to help automated tests in java");
+		list.add(jstrykerEntity);
+		jstrykerEntity = new JstrykerEntityWithoutColumn(4, "Tools to help automated tests in java 2");
+		list.add(jstrykerEntity);
+		
+		dbUnitHelper.truncateAndInsert(connection, list);
+		
+		InOrder inOrder = inOrder(dbUnitHelper);
+		inOrder.verify(dbUnitHelper, times(2)).executeOperation(anyString(), eq(connection), any(ByteArrayInputStream.class), eq(DatabaseOperation.TRUNCATE_TABLE));
+		inOrder.verify(dbUnitHelper, times(1)).executeOperation(anyString(), eq(connection), any(ByteArrayInputStream.class), eq(DatabaseOperation.INSERT));
+	}
+
+	@Test
+	public void shouldTruncateDataWithEntityObject() throws Exception {
+		DBUnitHelper dbUnitHelper = spy(new DBUnitHelper());
+		JstrykerEntityWithoutColumn jstrykerEntity = new JstrykerEntityWithoutColumn(3, "Tools to help automated tests in java");
+
+		dbUnitHelper.truncate(jstrykerEntity);
+
+		verify(dbUnitHelper).executeOperation(anyString(), any(Connection.class), any(ByteArrayInputStream.class), eq(DatabaseOperation.TRUNCATE_TABLE));
+	}
+
+	@Test
+	public void shouldTruncateDataWithEntityObjectUsingSpecifiedConnection() throws Exception {
+		DBUnitHelper dbUnitHelper = spy(new DBUnitHelper());
+		JstrykerEntityWithoutColumn jstrykerEntity = new JstrykerEntityWithoutColumn(3, "Tools to help automated tests in java");
+
+		dbUnitHelper.truncate(jstrykerEntity, connection);
+
+		verify(dbUnitHelper).executeOperation(anyString(), eq(connection), any(ByteArrayInputStream.class), eq(DatabaseOperation.TRUNCATE_TABLE));
+	}
+
+	@Test
+	public void shouldDeleteDataWithEntityObject() throws Exception {
+		DBUnitHelper dbUnitHelper = spy(new DBUnitHelper());
+
+		JstrykerEntityWithoutColumn jstrykerEntity = new JstrykerEntityWithoutColumn(3, "Tools to help automated tests in java");
+		
+		dbUnitHelper.delete(jstrykerEntity);
+
+		verify(dbUnitHelper).executeOperation(anyString(), any(Connection.class), any(ByteArrayInputStream.class), eq(DatabaseOperation.DELETE));
+	}
+
+	@Test
+	public void shouldDeleteDataWithEntityObjectUsingSpecifiedConnection() throws Exception {
+		DBUnitHelper dbUnitHelper = spy(new DBUnitHelper());
+
+		JstrykerEntityWithoutColumn jstrykerEntity = new JstrykerEntityWithoutColumn(3, "Tools to help automated tests in java");
+		
+		dbUnitHelper.delete(jstrykerEntity, connection);
+
+		verify(dbUnitHelper).executeOperation(anyString(), eq(connection), any(ByteArrayInputStream.class), eq(DatabaseOperation.DELETE));
+	}
+
+	@Test
+	public void shouldDeleteAllDataWithEntityObject() throws Exception {
+		DBUnitHelper dbUnitHelper = new DBUnitHelper();
+		JstrykerEntityWithoutColumn jstrykerEntity = new JstrykerEntityWithoutColumn(4, "Tools to help automated tests in java");
+
+		dbUnitHelper.insert(jstrykerEntity);
+		dbUnitHelper.deleteAll(Arrays.asList(jstrykerEntity));
+
+		int id = (Integer)  new QueryRunner().query(connection, "Select count(*) as total from jstryker", new ResultSetHandler() {
+			public Object handle(ResultSet rs) throws SQLException {
+				rs.next();
+				return rs.getInt("total");
+			}
+		});
+		assertEquals("Should not have data.", 0, id);
+	}
+
+	@Test
+	public void shouldDeleteAllDataWithEntityObjectWithSpecifiedConnection() throws Exception {
+		DBUnitHelper dbUnitHelper = spy(new DBUnitHelper());
+
+		JstrykerEntityWithoutColumn jstrykerEntity = new JstrykerEntityWithoutColumn(4, "Tools to help automated tests in java");
+		
+		dbUnitHelper.deleteAll(connection, Arrays.asList(jstrykerEntity));
+
+		verify(dbUnitHelper).executeOperation(anyString(), eq(connection), any(ByteArrayInputStream.class), eq(DatabaseOperation.DELETE_ALL));
+	}
+
+	@Test
+	public void shouldThrowJStrykerExceptionWhenParameterIsNotEntityObject() throws Exception {
+		Object object = new Object();
+		String reason = "Object("+object+") isn't Entity";
+		thrown.expect(JStrykerException.class);
+		thrown.expectMessage(reason);
+
+		new DBUnitHelper().cleanInsert(object, connection);
+	}
+
+}
+
+@Entity
+@Table(name = "jstryker")
+class JstrykerEntityWithTransient {
+	
+	public JstrykerEntityWithTransient(Integer pk, String msg, String dummy) {
+		this.pk = pk;
+		this.msg = msg;
+		this.dummy = dummy;
+	}
+	
+	@Id
+	@Column(name = "id")
+	private Integer pk;
+	
+	@Column(name = "description")
+	private String msg;
+	
+	@Transient
+	private String dummy;
+
+	public Integer getPk() {
+		return pk;
+	}
+
+	public String getMsg() {
+		return msg;
+	}
+
+	public String getDummy() {
+		return dummy;
+	}
+}
+
+@Entity
+@Table(name = "jstryker")
+class JstrykerEntityWithoutColumn {
+	
+	public JstrykerEntityWithoutColumn(Integer id, String description) {
+		this.id = id;
+		this.description = description;
+	}
+	
+	@Id
+	private Integer id;
+	
+	private String description;
+	
+	public Integer getId() {
+		return id;
+	}
+	
+	public String getDescription() {
+		return description;
 	}
 }
